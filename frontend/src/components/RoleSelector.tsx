@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import './RoleSelection.css'; // スタイルを別ファイルで定義
+import '../styles/RoleSelector.css'; // スタイルを別ファイルで定義
 
 // プレイヤーの役割を定義する型
 // HIDER: 隠れる側, SEEKER: 鬼, null: 未選択
 type PlayerRole = 'HIDER' | 'SEEKER' | null;
 
-const RoleSelection: React.FC = () => {
+const RoleSelector: React.FC = () => {
   // 現在選択されている役割を保持するstate
   // 初期値は未選択状態のnull
     const [selectedRole, setSelectedRole] = useState<PlayerRole>(null);
@@ -49,4 +49,4 @@ const RoleSelection: React.FC = () => {
 );
 };
 
-export default RoleSelection;
+export default RoleSelector;
