@@ -1,0 +1,11 @@
+.app-background {
+  position: absolute; /* 絶対位置指定 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/images/background.png'); /* 画像ファイルを指定 */
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* この要素を最背面に配置する */
+}
