@@ -1,0 +1,83 @@
+.lobby-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.lobby-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.lobby-status {
+    font-size: 1.2rem;
+    color: #666;
+    min-height: 2rem; /* メッセージの高さが変わってもレイアウトが崩れないように */
+}
+
+.players-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.player-card {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.player-card.self {
+    background-color: #007bff;
+    color: white;
+}
+
+.player-card.opponent {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.vs-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ff4757;
+}
+
+.start-message {
+    margin-top: 1.5rem;
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ローディングスピナーのアニメーション */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ccc;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+    transform: rotate(360deg);
+    }
+}
