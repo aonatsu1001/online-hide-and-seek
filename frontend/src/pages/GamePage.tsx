@@ -1,34 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react';
+import { sendHidingSpotId } from '../services/socketService';
+import ConfirmButton from '../components/ConfirmButton';
+import Stage1 from '../components/stages/Stage1'; // 作成したステージコンポーネントをインポート
 
-// 作成したコンポーネントをインポートする
-import Stage from '../components/Stage'
-import GameUI from '../components/GameUI' // GameHUDからGameUIに変更
-
-// 用意したステージ画像をインポートする
-import stage1Background from '../assets/images/background.png'
+// --- アセットのインポート ---
+// userIconはStage1に渡すためにここでインポートします
+import myIcon from '../assets/icons/user_icon.png';
 
 const GamePage: React.FC = () => {
-  // --- 状態管理（仮データ）---
-  const [timeRemaining, setTimeRemaining] = useState(300)
-  const [guessesLeft, setGuessesLeft] = useState(5)
-  const [currentStageImage] = useState(stage1Background)
+    // ゲームの状態管理(どの場所が選択されたか)は、親であるGamePageが担当します
+    const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
-  // --- 動作確認用のタイマー ---
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prevTime) => (prevTime > 0 ? prevTime - 1 : 0))
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
+    // バックエンドへの送信ロジックもGamePageが担当します
+    const confirmHidingSpot = () => {
+        if (selectedSpotId) {
+        sendHidingSpotId(selectedSpotId);
+        alert(`ID: ${selectedSpotId} に隠れました！`);
+        }
+    };
 
-  // --- レンダリング ---
-  return (
-    <div>
-      {/* 呼び出すコンポーネントをGameUIに変更 */}
-      <GameUI timeRemaining={timeRemaining} guessesLeft={guessesLeft} />
-      <Stage stageImageUrl={currentStageImage} />
-    </div>
-  )
-}
+    return (
+        <div>
+        {/* ↓作成したStage1コンポーネントを呼び出し、必要な情報を渡す */}
+        <Stage1 
+            selectedSpotId={selectedSpotId}
+            onSpotClick={setSelectedSpotId}
+            userIcon={myIcon}
+        />
+        
+        {/* ConfirmButtonはページ全体に関わるので、ここに残します */}
+        <ConfirmButton 
+            onClick={confirmHidingSpot} 
+            disabled={!selectedSpotId} 
+        />
+        </div>
+    );
+};
 
-export default GamePage
+export default GamePage;
