@@ -2,15 +2,40 @@
 
 import sys
 import os
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # プロジェクトのルートディレクトリをPythonパスに追加（必要に応じて）
-# これにより、backend.apiなどのインポートが可能になる
-# 例: backendディレクトリの親ディレクトリから実行する場合
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-# backendディレクトリ内で実行する場合、またはPYTHONPATHが正しく設定されている場合は不要なこともあります
 
-# backend/api/game/role_manager.py から FastAPI アプリケーションインスタンス 'app' をインポート
-# role_manager.py で 'app = FastAPI()' と定義しているので、これを直接インポートします
-from backend.app.game.role_manager import app
+# FastAPIアプリケーションインスタンスをここで生成
+app = FastAPI(
+    title="Online Hide-and-Seek API",
+    description="Main API for the online hide-and-seek game.",
+    version="0.1.0",
+)
+
+# CORSミドルウェアの設定
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # フロントエンドのURL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# room_routerをインポート
+from backend.app.api.room_router import router as room_router
+# role_managerのルーターをインポート
+from backend.app.game.role_manager import router as game_router
+
+# ルーターをアプリケーションに含める
+app.include_router(room_router, prefix="/room") # room_routerにプレフィックスを設定
+app.include_router(game_router) # game_routerは内部でプレフィックスを設定済み
+
+# ルートパスにアクセスした際のメッセージ (オプション)
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the Online Hide-and-Seek API!"}
 
 # これで、uvicorn main:app --reload コマンドがこの 'app' インスタンスを実行します
