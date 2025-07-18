@@ -1,68 +1,80 @@
-import React from 'react';
-import ClickableSpot from '../ClickableSpot';
+import React from 'react'
+import ClickableSpot from '../ClickableSpot'
+import './../../styles/stages.css' // ★ 新しいCSSファイルをインポート
 
-// --- このコンポーネントが必要とするデータを親から受け取るための型定義 ---
+// --- このコンポーネントが必要とするデータ（変更なし） ---
 interface Stage1Props {
-  selectedSpotId: string | null;
-  onSpotClick: (id: string) => void;
-  userIcon: string;
+  selectedSpotId: string | null
+  onSpotClick: (id: string) => void
+  userIcon: string
 }
 
-// --- このステージで使う画像 ---
-import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png';
-import plantImage from '../../assets/stage_elements/stage1/plant.png';
-import lampImage from '../../assets/stage_elements/stage1/lamp.png';
-// ★ 1. 背景画像をインポートする
-import backgroundImage from '../../assets/stage_elements/stage1/background.png';
+// --- このステージで使う画像（変更なし） ---
+import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png'
+import plantImage from '../../assets/stage_elements/stage1/plant.png'
+import lampImage from '../../assets/stage_elements/stage1/lamp.png'
+import callImage from '../../assets/stage_elements/stage1/call.png'
+import webImage from '../../assets/stage_elements/stage1/web.png'
+import mailImage from '../../assets/stage_elements/stage1/mail.png'
+import hintImage from '../../assets/stage_elements/stage1/hint.png'
+import presentImage from '../../assets/stage_elements/stage1/present.png'
+import cameraImage from '../../assets/stage_elements/stage1/camera.png'
+import heartImage from '../../assets/stage_elements/stage1/heart.png'
+import memoImage from '../../assets/stage_elements/stage1/memo.png'
 
-const Stage1: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon }) => {
-  // ★ 2. 背景画像を設定するためのスタイルオブジェクトを作成
-  const containerStyle: React.CSSProperties = {
-    backgroundImage: `url(${backgroundImage})`, // 背景画像を指定
-    backgroundSize: 'cover',                   // コンテナ全体を覆うように調整
-    backgroundPosition: 'center',              // 画像を中央に配置
-    backgroundRepeat: 'no-repeat',             // 画像の繰り返しを無効化
-    padding: '20px',                           // 内側の余白
-    minHeight: '80vh',                         // 最低限の高さを確保
-  };
+const Stage1: React.FC<Stage1Props> = ({
+  selectedSpotId,
+  onSpotClick,
+  userIcon,
+}) => {
+  // 表示するアイテムのリストを定義
+  const spots = [
+    { id: 'bookshelf-left', src: bookshelfImage, alt: '本棚', height: '200px' },
+    { id: 'plant-pot', src: plantImage, alt: '観葉植物', height: '100px' },
+    { id: 'desk-lamp', src: lampImage, alt: '電気スタンド', height: '150px' },
+    { id: 'call', src: callImage, alt: '電話', height: '180px' }, // ← 追加
+    { id: 'web', src: webImage, alt: 'ウェブ', height: '150px' }, // ← 追加
+    { id: 'hint', src: hintImage, alt: 'ヒント', height: '180px' },
+    { id: 'mail', src: mailImage, alt: 'メール', height: '120px' },
+    { id: 'present', src: presentImage, alt: 'プレゼント', height: '150px' },
+    { id: 'camera', src: cameraImage, alt: 'カメラ', height: '120px' },
+    { id: 'heart', src: heartImage, alt: 'ハート', height: '150px' },
+    { id: 'memo', src: memoImage, alt: 'メモ', height: '150px' },
+    // 他のアイテムもここに追加できます
+  ]
 
   return (
-    // ★ 3. 作成したスタイルを外側のdivに適用する
-    <div style={containerStyle}>
-      <h1>ハッカソン会場</h1>
-      <p>隠れたい場所をクリックして選択してください。</p>
+    <div className="stage-layout">
+      {/* 画面上部のコンテンツ */}
+      <div className="stage-header">
+        <h1>ハッカソン会場</h1>
+        <p>隠れたい場所をクリックして選択してください。</p>
+      </div>
 
-      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '20px', padding: '20px' }}>
-        {/* ClickableSpotコンポーネントは変更なし */}
-        <ClickableSpot
-          id="bookshelf-left"
-          userIcon={userIcon}
-          isSelected={selectedSpotId === 'bookshelf-left'}
-          onClick={onSpotClick}
-        >
-          <img src={bookshelfImage} alt="本棚" style={{ height: '200px' }} />
-        </ClickableSpot>
-
-        <ClickableSpot
-          id="plant-pot"
-          userIcon={userIcon}
-          isSelected={selectedSpotId === 'plant-pot'}
-          onClick={onSpotClick}
-        >
-          <img src={plantImage} alt="観葉植物" style={{ height: '100px' }} />
-        </ClickableSpot>
-        
-        <ClickableSpot
-          id="desk-lamp"
-          userIcon={userIcon}
-          isSelected={selectedSpotId === 'desk-lamp'}
-          onClick={onSpotClick}
-        >
-          <img src={lampImage} alt="電気スタンド" style={{ height: '150px' }} />
-        </ClickableSpot>
+      {/* 画面下部の自動スクロールコンテナ */}
+      <div className="scrolling-tray-container">
+        <div className="scrolling-tray">
+          {/* 無限スクロールのために、リストを2回レンダリングする */}
+          {[...spots, ...spots].map((spot, index) => (
+            <div className="tray-item" key={`${spot.id}-${index}`}>
+              <ClickableSpot
+                id={spot.id}
+                userIcon={userIcon}
+                isSelected={selectedSpotId === spot.id}
+                onClick={onSpotClick}
+              >
+                <img
+                  src={spot.src}
+                  alt={spot.alt}
+                  style={{ height: spot.height }}
+                />
+              </ClickableSpot>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Stage1;
+export default Stage1

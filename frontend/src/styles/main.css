@@ -1,11 +1,22 @@
-.app-background {
-  position: absolute; /* 絶対位置指定 */
+/* 既存のスタイルに追記 */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container::before {
+  content: '';
+  position: fixed; /* 常に画面に固定 */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../assets/images/background.png'); /* 画像ファイルを指定 */
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/stage_elements/stage1/background.png'); /* Stage1で使っていた背景画像 */
   background-size: cover;
   background-position: center;
-  z-index: -1; /* この要素を最背面に配置する */
+  z-index: -1; /* 全てのコンテンツの背面に配置 */
+  opacity: 0.8; /* 少しだけ透明にする（お好みで調整） */
 }
