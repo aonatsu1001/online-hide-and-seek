@@ -9,12 +9,15 @@ interface ClickableSpotProps {
 }
 
 const ClickableSpot: React.FC<ClickableSpotProps> = ({ id, userIcon, isSelected, onClick, children }) => {
-  // 選択されていたらユーザーアイコンを、そうでなければ元の要素(children)を表示
-const content = isSelected ? (
-    <img src={userIcon} alt="Selected Spot" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-) : (
-    children
-);
+
+    // isSelectedがtrueの場合、children（元のimg要素）をクローンし、
+    // srcプロパティだけをuserIconに差し替える
+    const content = (
+        // isSelectedがtrueでもfalseでも、childrenがReact要素であることを確認
+        React.isValidElement(children) && isSelected
+        ? React.cloneElement(children as React.ReactElement, { src: userIcon, alt: 'Selected Spot' })
+        : children
+    );
 
 const style: React.CSSProperties = {
     cursor: 'pointer',
