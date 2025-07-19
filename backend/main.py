@@ -16,9 +16,16 @@ app = FastAPI(
 )
 
 # CORSミドルウェアの設定
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:5173", # Viteのデフォルトポート
+    "http://localhost:8080",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # フロントエンドのURL
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,10 +35,13 @@ app.add_middleware(
 from backend.app.api.room_router import router as room_router
 # role_managerのルーターをインポート
 from backend.app.game.role_manager import router as game_router
+# game_logicのルーターをインポート
+from backend.app.game.game_logic import router as game_logic_router
 
 # ルーターをアプリケーションに含める
 app.include_router(room_router, prefix="/room") # room_routerにプレフィックスを設定
 app.include_router(game_router) # game_routerは内部でプレフィックスを設定済み
+app.include_router(game_logic_router) # game_logic_routerは内部でプレフィックスを設定済み
 
 # ルートパスにアクセスした際のメッセージ (オプション)
 @app.get("/")

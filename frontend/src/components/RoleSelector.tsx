@@ -3,18 +3,38 @@ import '../styles/RoleSelector.css'; // スタイルを別ファイルで定義
 
 // プレイヤーの役割を定義する型
 // HIDER: 隠れる側, SEEKER: 鬼, null: 未選択
-type PlayerRole = 'HIDER' | 'SEEKER' | null;
+type PlayerRole = 'HIDER' | 'SEEKER';
 
-const RoleSelector: React.FC = () => {
+interface RoleSelectorProps {
+  username: string; // 仮のユーザー名
+  roomId: string;   // 仮のルームID
+}
+
+const RoleSelector: React.FC<RoleSelectorProps> = ({ username, roomId }) => {
   // 現在選択されている役割を保持するstate
   // 初期値は未選択状態のnull
-    const [selectedRole, setSelectedRole] = useState<PlayerRole>(null);
+    const [selectedRole, setSelectedRole] = useState<PlayerRole | null>(null);
 
   // 役割を選択したときの処理
-    const handleRoleSelect = (role: PlayerRole) => {
+    const handleRoleSelect = async (role: PlayerRole) => {
     setSelectedRole(role);
-    // ここでバックエンドに選択した役割を送信する処理などを追加します
-    console.log(`役割「${role === 'HIDER' ? '隠れる側' : '鬼'}」を選択しました。`);
+    console.log(`役割「${role}」を選択しました。サーバーに通知します。`);
+    try {
+      const response = await fetch('http://localhost:8000/select-role', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, role, room_id: roomId }),
+      });
+      if (!response.ok) {
+        throw new Error('役割選択の通知に失敗しました。');
+      }
+      const result = await response.json();
+      console.log('サーバーからの応答:', result);
+    } catch (error) {
+      console.error(error);
+    }
     };
     
     return (

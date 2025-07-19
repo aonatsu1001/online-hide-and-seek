@@ -1,28 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { sendHidingSpotId } from '../services/socketService';
 import ConfirmButton from '../components/ConfirmButton';
-import Stage1 from '../components/stages/Stage1'; // 作成したステージコンポーネントをインポート
+import Stage1_hidding from '../components/stages/Stage1_hidding';
+import GameUI from '../components/GameUI';
 
 // --- アセットのインポート ---
 // userIconはStage1に渡すためにここでインポートします
 import myIcon from '../assets/icons/user_icon.png';
 
-const GamePage: React.FC = () => {
+interface GamePage_hide_hiddingProps {
+    onTimeEnd: (spotId: string | null) => void;
+}
+
+const GamePage_hide_hidding: React.FC<GamePage_hide_hiddingProps> = ({ onTimeEnd }) => {
     // ゲームの状態管理(どの場所が選択されたか)は、親であるGamePageが担当します
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
+    const [timeRemaining, setTimeRemaining] = useState(60); // 制限時間を60秒に設定
+
+    useEffect(() => {
+        if (timeRemaining > 0) {
+            const timerId = setInterval(() => {
+                setTimeRemaining(prevTime => prevTime - 1);
+            }, 1000);
+            return () => clearInterval(timerId);
+        } else {
+            onTimeEnd(selectedSpotId);
+        }
+    }, [timeRemaining, onTimeEnd, selectedSpotId]);
 
     // バックエンドへの送信ロジックもGamePageが担当します
     const confirmHidingSpot = () => {
         if (selectedSpotId) {
-        sendHidingSpotId(selectedSpotId);
-        alert(`ID: ${selectedSpotId} に隠れました！`);
+            sendHidingSpotId(selectedSpotId);
+            onTimeEnd(selectedSpotId);
         }
     };
 
     return (
         <div>
+        <GameUI timeRemaining={timeRemaining} guessesLeft={0} />
         {/* ↓作成したStage1コンポーネントを呼び出し、必要な情報を渡す */}
-        <Stage1 
+        <Stage1_hidding 
             selectedSpotId={selectedSpotId}
             onSpotClick={setSelectedSpotId}
             userIcon={myIcon}
@@ -37,4 +55,4 @@ const GamePage: React.FC = () => {
     );
 };
 
-export default GamePage;
+export default GamePage_hide_hidding;

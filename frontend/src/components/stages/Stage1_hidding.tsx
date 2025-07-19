@@ -39,6 +39,7 @@ const Stage1: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon }
           userIcon={userIcon}
           isSelected={selectedSpotId === 'bookshelf-left'}
           onClick={onSpotClick}
+          userRole="HIDER"
         >
           <img src={bookshelfImage} alt="本棚" style={{ height: '200px' }} />
         </ClickableSpot>
@@ -48,6 +49,7 @@ const Stage1: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon }
           userIcon={userIcon}
           isSelected={selectedSpotId === 'plant-pot'}
           onClick={onSpotClick}
+          userRole="HIDER"
         >
           <img src={plantImage} alt="観葉植物" style={{ height: '100px' }} />
         </ClickableSpot>
@@ -57,6 +59,7 @@ const Stage1: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon }
           userIcon={userIcon}
           isSelected={selectedSpotId === 'desk-lamp'}
           onClick={onSpotClick}
+          userRole="HIDER"
         >
           <img src={lampImage} alt="電気スタンド" style={{ height: '150px' }} />
         </ClickableSpot>
