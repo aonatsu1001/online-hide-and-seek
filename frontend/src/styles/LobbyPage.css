@@ -1,0 +1,39 @@
+.lobby-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.lobby-container h1 {
+  font-size: 3rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.lobby-container input {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  width: 250px;
+  text-align: center;
+}
+
+.lobby-container button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.lobby-container button:hover {
+  background-color: #0056b3;
+}
