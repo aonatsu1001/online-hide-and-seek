@@ -72,6 +72,24 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                         print(f"Sent hiding_spot_chosen to SEEKER in room {room_id} with ID: {hiding_spot_id}")
                     else:
                         print(f"Received set_hiding_spot event without 'id' in data: {message}")
+                
+                elif event_type == "guess":
+                    guessed_spot_id = event_data.get("id")
+                    hiding_spot_id = get_hiding_spot_for_room(room_id)
+                    
+                    result = "found" if guessed_spot_id == hiding_spot_id else "not_found"
+                    
+                    game_result_message = {
+                        "event": "game_result",
+                        "data": {
+                            "result": result,
+                            "guessed_spot": guessed_spot_id
+                        }
+                    }
+                    # 結果をルーム全体にブロードキャスト
+                    await manager.broadcast_to_room(json.dumps(game_result_message), room_id)
+                    print(f"Broadcasted game_result to room {room_id}. Result: {result}")
+
                 else:
                     # その他のメッセージは既存のブロードキャストロジックで処理
                     await manager.broadcast_to_room(json.dumps({'type': 'message', 'content': message, 'room_id': room_id}), room_id)
