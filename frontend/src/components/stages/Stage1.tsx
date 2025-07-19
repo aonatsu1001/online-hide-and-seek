@@ -1,5 +1,5 @@
 import React from 'react'
-import ClickableSpot from '../ClickableSpot'
+import ClickableSpot from '../ClickableSpot_sena'
 import './../../styles/stage1.css' // cssファイル名を修正
 
 // --- Propsの定義（変更なし） ---
@@ -25,6 +25,7 @@ import manImage from '../../assets/stage_elements/stage1/man.png'
 import docterImage from '../../assets/stage_elements/stage1/docter.png'
 import washokuImage from '../../assets/stage_elements/stage1/washoku.png'
 import rainImage from '../../assets/stage_elements/stage1/rain.png'
+import micImage from '../../assets/stage_elements/stage1/mic.png'
 
 const Stage1: React.FC<Stage1Props> = ({
   selectedSpotId,
@@ -48,6 +49,7 @@ const Stage1: React.FC<Stage1Props> = ({
     { id: 'docter', src: docterImage, alt: '医者' },
     { id: 'washoku', src: washokuImage, alt: '和食' },
     { id: 'rain', src: rainImage, alt: '雨' },
+    { id: 'mic', src: micImage, alt: 'マイク' },
   ]
 
   return (

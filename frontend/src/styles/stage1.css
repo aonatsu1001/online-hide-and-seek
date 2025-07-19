@@ -8,13 +8,12 @@
 /* 中央のコンテンツ枠 */
 .content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 25px;
+  /* ★ 列数を8で固定する */
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px; /* アイテムの間隔を少し詰める */
 
   max-width: 1400px;
-  /* ★ このmargin: 0 auto;で中央配置が実現される */
   margin: 0 auto;
-
   padding: 30px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 16px;
