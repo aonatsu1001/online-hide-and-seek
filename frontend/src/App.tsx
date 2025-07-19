@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { registerGameStartCallback, registerRoleUpdateCallback } from './services/socketService';
+import { connect, registerGameStartCallback, registerRoleUpdateCallback } from './services/socketService';
 import './App.css';
 import './styles/main.css';
 
 // --- 各ページのコンポーネントをインポート ---
-// import LobbyPage from './pages/LobbyPage.tsx';
+import LobbyPage from './pages/LobbyPage.tsx';
 import RoleSelector from './components/RoleSelector.tsx';
 // 【追加】新しい4つのゲーム画面コンポーネントをインポート
 import GamePageHideHidding from './pages/GamePage_hide_hidding.tsx';
@@ -22,14 +22,15 @@ function App() {
   const [gameState, setGameState] = useState<GameState>('LOBBY');
   const [userRole, setUserRole] = useState<PlayerRole | null>(null);
   const [hidingSpotId, setHidingSpotId] = useState<string | null>(null);
+  const [roomId, setRoomId] = useState<string>('');
   // 各タブでユニークなユーザー名を生成
   const [username] = useState(`user_${Math.random().toString(36).substring(7)}`);
-  const roomId = "test_room";
 
   // --- State更新関数 ---
 
-  // マッチング完了 -> 役割選択へ
-  const handleMatchingComplete = () => {
+  const handleJoinRoom = (newRoomId: string) => {
+    setRoomId(newRoomId);
+    connect(newRoomId); // WebSocketに接続
     setGameState('ROLE_SELECT');
   };
 
@@ -79,7 +80,7 @@ function App() {
   const renderPage = () => {
     switch (gameState) {
       case 'LOBBY':
-        return <RoleSelector username={username} roomId={roomId} />;
+        return <LobbyPage onJoinRoom={handleJoinRoom} />;
       
       case 'ROLE_SELECT':
         return <RoleSelector username={username} roomId={roomId} />;
