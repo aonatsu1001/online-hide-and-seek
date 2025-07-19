@@ -3,7 +3,6 @@ import Header from '../Header'
 import SearchBar from '../SearchBar'
 import Sidebar from '../Sidebar'
 import ClickableSpot from '../ClickableSpot'
-
 import NewsItem from '../NewsItem'
 import '../../styles/stage1.css'
 
@@ -36,7 +35,8 @@ import zenmaiImage from '../../assets/stage_elements/stage1/zenmai.png'
 import kakuseiImage from '../../assets/stage_elements/stage1/kakusei.png'
 import mannenImage from '../../assets/stage_elements/stage1/mannen.png'
 import mailImage from '../../assets/stage_elements/stage1/mail.png'
-const Stage1: React.FC<Stage1Props> = ({
+
+const Stage1_hidding: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
   userIcon,
@@ -98,6 +98,9 @@ const Stage1: React.FC<Stage1Props> = ({
     },
   ]
 
+  // ★ このコンポーネント内での役割を 'HIDER' として定義する
+  const userRole = 'HIDER'
+
   return (
     <>
       <Header />
@@ -108,7 +111,7 @@ const Stage1: React.FC<Stage1Props> = ({
             selectedSpotId={selectedSpotId}
             onSpotClick={onSpotClick}
             userIcon={userIcon}
-            userRole={'HIDER'}
+            userRole={userRole} // ★ 定義したuserRoleを渡す
           />
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
@@ -119,7 +122,7 @@ const Stage1: React.FC<Stage1Props> = ({
                     userIcon={userIcon}
                     isSelected={selectedSpotId === spot.id}
                     onClick={onSpotClick}
-                    userRole={'HIDER'}
+                    userRole={userRole} // ★ 定義したuserRoleを渡す
                   >
                     <img src={spot.src} alt={spot.alt} />
                   </ClickableSpot>
@@ -130,6 +133,11 @@ const Stage1: React.FC<Stage1Props> = ({
               {newsFeed.map((item) => (
                 <NewsItem
                   key={item.id}
+                  id={item.id.toString()}
+                  isSelected={selectedSpotId === item.id.toString()}
+                  onClick={onSpotClick}
+                  userIcon={userIcon}
+                  userRole={userRole} // ★ 定義したuserRoleを渡す
                   title={item.title}
                   source={item.source}
                   imageUrl={item.imageUrl}
@@ -144,4 +152,4 @@ const Stage1: React.FC<Stage1Props> = ({
   )
 }
 
-export default Stage1
+export default Stage1_hidding

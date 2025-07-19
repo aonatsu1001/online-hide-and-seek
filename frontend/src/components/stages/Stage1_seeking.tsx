@@ -117,7 +117,6 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
               {allSpots.map((spot) => {
-                const isHiddenHere = hidingSpotId === spot.id
                 return (
                   <div
                     className="grid-item"
@@ -141,6 +140,7 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
                       userRole={userRole}
                       hidingSpotId={hidingSpotId}
                     >
+                      {/* ★★★ 常に元のアイコン画像を表示するように修正 ★★★ */}
                       <img src={spot.src} alt={spot.alt} />
                     </ClickableSpot>
                   </div>
@@ -151,6 +151,11 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
               {newsFeed.map((item) => (
                 <NewsItem
                   key={item.id}
+                  id={item.id.toString()} // ★ IDを渡す
+                  isSelected={selectedSpotId === item.id.toString()} // ★ 選択状態を渡す
+                  onClick={onSpotClick} // ★ クリック処理を渡す
+                  userIcon={userIcon} // ★ ユーザーアイコンを渡す
+                  userRole={userRole} // ★ 役割を渡す
                   title={item.title}
                   source={item.source}
                   imageUrl={item.imageUrl}
