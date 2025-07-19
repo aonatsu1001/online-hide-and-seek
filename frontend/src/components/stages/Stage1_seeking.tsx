@@ -98,20 +98,23 @@ const Stage1: React.FC<Stage1Props> = ({
               </p>
             */}
             <div className="content-grid">
-              {allSpots.map((spot) => (
-                <div className="grid-item" key={spot.id} style={getGridItemStyle(spot.id)}>
-                  <ClickableSpot
-                    id={spot.id}
-                    userIcon={userIcon}
-                    isSelected={selectedSpotId === spot.id}
-                    onClick={onSpotClick}
-                    userRole={userRole}
-                    isHidingSpot={hidingSpotId === spot.id}
-                  >
-                    <img src={spot.src} alt={spot.alt} />
-                  </ClickableSpot>
-                </div>
-              ))}
+              {allSpots.map((spot) => {
+                const isHiddenHere = hidingSpotId === spot.id;
+                return (
+                  <div className="grid-item" key={spot.id} style={getGridItemStyle(spot.id)}>
+                    <ClickableSpot
+                      id={spot.id}
+                      userIcon={userIcon}
+                      isSelected={selectedSpotId === spot.id}
+                      onClick={onSpotClick}
+                      userRole={userRole}
+                      isHidingSpot={isHiddenHere}
+                    >
+                      <img src={spot.src} alt={spot.alt} />
+                    </ClickableSpot>
+                  </div>
+                );
+              })}
             </div>
           </main>
         </div>

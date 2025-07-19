@@ -73,10 +73,10 @@ function App() {
   // hidingSpotIdが更新されたら、2秒後にSEEKING_PHASEに移行する
   useEffect(() => {
     if (gameState === 'LOADING' && hidingSpotId) {
-      console.log('App.tsx: hidingSpotIdが設定されたため、2秒後に探す時間へ移行します。');
+      console.log('App.tsx: hidingSpotIdが設定されたため、6秒後に探す時間へ移行します。');
       const timer = setTimeout(() => {
         setGameState('SEEKING_PHASE');
-      }, 2000); // 2秒間ローディング画面を表示
+      }, 1000); // 2秒間ローディング画面を表示
       return () => clearTimeout(timer);
     }
   }, [gameState, hidingSpotId]);
