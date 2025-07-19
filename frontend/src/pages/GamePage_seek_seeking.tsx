@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { sendGuess, registerGameResultCallback } from '../services/socketService';
 import ConfirmButton from '../components/ConfirmButton';
 import Stage1_seeking from '../components/stages/Stage1_seeking';
 import GameUI from '../components/GameUI';
@@ -15,6 +16,7 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
     const [timeRemaining, setTimeRemaining] = useState(60);
     const [guessesLeft, setGuessesLeft] = useState(3);
+    const [gameResult, setGameResult] = useState<string | null>(null);
 
     useEffect(() => {
         if (timeRemaining > 0) {
@@ -25,16 +27,23 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
         }
     }, [timeRemaining]);
 
+    useEffect(() => {
+        const unregister = registerGameResultCallback((data) => {
+            setGameResult(data.result);
+            if (data.result === 'found') {
+                alert('見つけた！あなたの勝ちです！');
+            } else {
+                alert('そこにはいないようだ...');
+            }
+        });
+        return () => unregister();
+    }, []);
+
     const handleGuess = () => {
         if (!selectedSpotId) return;
 
-        if (selectedSpotId === hidingSpotId) {
-            alert('見つけた！あなたの勝ちです！');
-            // ここでゲーム終了の処理を呼び出す
-        } else {
-            alert('そこにはいないようだ...');
-            setGuessesLeft(prev => prev - 1);
-        }
+        sendGuess(selectedSpotId);
+        setGuessesLeft(prev => prev - 1);
     };
 
     return (

@@ -14,6 +14,7 @@ socket.onopen = () => {
 let onHidingSpotChosenCallback: ((spotId: string) => void) | null = null;
 let onGameStartCallback: (() => void) | null = null;
 let onRoleUpdateCallback: ((players: any) => void) | null = null;
+let onGameResultCallback: ((result: any) => void) | null = null;
 
 // サーバーからメッセージを受信した時の処理
 socket.onmessage = (event) => {
@@ -30,6 +31,10 @@ socket.onmessage = (event) => {
 
     if (message.type === 'role_update' && onRoleUpdateCallback) {
         onRoleUpdateCallback(message.players);
+    }
+
+    if (message.event === 'game_result' && onGameResultCallback) {
+        onGameResultCallback(message.data);
     }
 };
 
@@ -54,6 +59,13 @@ export const registerRoleUpdateCallback = (callback: (players: any) => void) => 
     };
 };
 
+export const registerGameResultCallback = (callback: (result: any) => void) => {
+    onGameResultCallback = callback;
+    return () => {
+        onGameResultCallback = null;
+    };
+};
+
 // エラー発生時の処理
 socket.onerror = (error) => {
     console.error('WebSocket Error: ', error);
@@ -70,6 +82,20 @@ export const sendHidingSpotId = (spotId: string) => {
         data: {
             id: spotId, // 送信するデータをIDに変更
         },
+        };
+        socket.send(JSON.stringify(message));
+    } else {
+        console.error('WebSocket is not connected.');
+    }
+};
+
+export const sendGuess = (spotId: string) => {
+    if (socket.readyState === WebSocket.OPEN) {
+        const message = {
+            event: 'guess',
+            data: {
+                id: spotId,
+            },
         };
         socket.send(JSON.stringify(message));
     } else {
