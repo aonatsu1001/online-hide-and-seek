@@ -10,6 +10,10 @@ import soccerIcon from '../assets/stage_elements/stage1/soccer.png'
 import baseballIcon from '../assets/stage_elements/stage1/baseball.png'
 import noteIcon from '../assets/stage_elements/stage1/note.png'
 import penkiIcon from '../assets/stage_elements/stage1/penki.png'
+import goodIcon from '../assets/stage_elements/stage1/good.png'
+import gensiIcon from '../assets/stage_elements/stage1/gensi.png'
+import bookIcon from '../assets/stage_elements/stage1/book.png'
+import dougaIcon from '../assets/stage_elements/stage1/douga.png'
 // ... 他のアイコンもインポート
 
 const Sidebar: React.FC = () => {
@@ -23,11 +27,16 @@ const Sidebar: React.FC = () => {
     { name: '野球場', icon: baseballIcon, href: '#' },
     { name: 'ノート', icon: noteIcon, href: '#' },
     { name: 'ペンキ', icon: penkiIcon, href: '#' },
+    { name: 'いいね', icon: goodIcon, href: '#' },
+    { name: '原子力発電所', icon: gensiIcon, href: '#' },
+    { name: '読書', icon: bookIcon, href: '#' },
+    { name: '動画再生', icon: dougaIcon, href: '#' },
     // 他の項目もここに追加
   ]
 
   return (
     <aside className="sidebar-container">
+      <h3 className="sidebar-title">今週のトレンド</h3>
       <ul>
         {menuItems.map((item) => (
           <li key={item.name}>

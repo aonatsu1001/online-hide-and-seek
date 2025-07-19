@@ -1,95 +1,23 @@
-/* ヘッダー全体を画面上部中央に配置 */
+/* ヘッダー全体をページ上部中央に配置 */
 .app-header {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* ↓↓↓ この部分を書き換える ↓↓↓ */
+  /* position: fixed; を削除 */
+  margin: 20px auto; /* 上下に20pxの余白、左右はautoで中央揃え */
+  /* top, left, transform, z-index を削除 */
+  /* ↑↑↑ この部分を書き換える ↑↑↑ */
+
   width: 95%;
   max-width: 1200px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* ★ 上下の余白を小さくする */
   padding: 5px 25px;
-
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.8); /* 透明度を少し上げる */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 50px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-
-  z-index: 1000;
   box-sizing: border-box;
   font-family: sans-serif;
-}
-
-/* ロゴのスタイル */
-.logo {
-  /* ★ ロゴの文字サイズを少し小さくする */
-  font-size: 20px;
-  font-weight: bold;
-  color: #f8de22;
-  text-shadow:
-    -1px -1px 0 #4a4a4a,
-    1px -1px 0 #4a4a4a,
-    -1px 1px 0 #4a4a4a,
-    1px 1px 0 #4a4a4a;
-}
-
-/* ナビゲーションメニュー全体 */
-.navigation-menu {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-/* 通常のメニュー項目 */
-.navigation-menu a {
-  text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-  transition: color 0.2s;
-}
-
-.navigation-menu a:hover {
-  color: #007bff;
-}
-
-/* 区切り線のスタイル */
-.divider {
-  color: #ddd;
-  font-weight: lighter;
-}
-
-/* 右端のお問い合わせボタン */
-.contact-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #1a1a1a;
-  color: white !important;
-  /* ★ ボタンの余白を小さくする */
-  padding: 5px 8px 5px 14px;
-  border-radius: 30px;
-  font-weight: bold;
-  transition: background-color 0.2s;
-}
-
-.contact-button:hover {
-  background-color: #333;
-}
-
-/* ボタン内の矢印アイコン */
-.arrow-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* ★ アイコンのサイズを小さくする */
-  width: 22px;
-  height: 22px;
-  background-color: #00bfa5;
-  border-radius: 50%;
 }
