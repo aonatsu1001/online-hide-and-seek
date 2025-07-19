@@ -1,11 +1,36 @@
-.app-background {
-  position: absolute; /* 絶対位置指定 */
+/* 既存のスタイルに追記 */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- 背景画像の条件分岐 --- */
+
+/* 背景を適用するための共通設定 */
+.app-container::before {
+  content: '';
+  position: fixed; /* 常に画面に固定 */
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../assets/images/background.png'); /* 画像ファイルを指定 */
+  width: 100vw;
+  height: 100vh;
   background-size: cover;
   background-position: center;
-  z-index: -1; /* この要素を最背面に配置する */
+  z-index: -1; /* 全てのコンテンツの背面に配置 */
+  transition: background-image 0.5s ease-in-out; /* 背景が滑らかに切り替わるアニメーション */
+}
+
+/* ゲーム外（ロビー、役割選択）の背景 */
+.app-container.lobby-background::before {
+  background-image: url('../assets/images/background.png');
+  opacity: 1; /* こちらは透明にしない場合 */
+}
+
+/* ゲーム中（ステージ1）の背景 */
+.app-container.in-game-background::before {
+  background-image: url('../assets/stage_elements/stage1/background.png');
+  opacity: 0.8; /* 少しだけ透明にする（お好みで調整） */
 }

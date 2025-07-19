@@ -1,32 +1,16 @@
-# backend/api/game/role_manager.py
-
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict, List
-
-# FastAPIアプリケーションインスタンスをここで生成
-# これが 'app' として uvicorn に認識されます
-app = FastAPI(
-    title="Online Hide-and-Seek API (Role Manager)",
-    description="API for role selection and management.",
-    version="0.1.0",
-)
-
-# CORSミドルウェアの設定
-# main.pyではなく、ここで直接FastAPIアプリに適用します
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # フロントエンドのURL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # プレイヤー情報と接続管理
 players: Dict[str, str] = {}  # 例: {'user1': 'HIDER'}
 connections: List[WebSocket] = []
 
-@app.post("/game/select-role") # パスに '/game' プレフィックスを直接含める
+router = APIRouter(
+    prefix="/game", # /game プレフィックスをルーターに設定
+    tags=["Game Role Management"]
+)
+
+@router.post("/select-role") # ルーターにプレフィックスを設定したので、ここでは /select-role
 async def select_role(data: dict):
     username = data.get("username")
     role = data.get("role")
@@ -36,7 +20,7 @@ async def select_role(data: dict):
         return {"message": f"{username} が {role} を選択しました"}
     return {"error": "無効なデータです"}
 
-@app.websocket("/game/ws") # パスに '/game' プレフィックスを直接含める
+@router.websocket("/ws") # ルーターにプレフィックスを設定したので、ここでは /ws
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     connections.append(websocket)
@@ -76,6 +60,6 @@ async def broadcast_roles():
             connections.remove(conn)
 
 # ルートパスにアクセスした際のメッセージ (オプション)
-@app.get("/")
+@router.get("/")
 async def read_root():
     return {"message": "Welcome to the Role Manager API!"}
