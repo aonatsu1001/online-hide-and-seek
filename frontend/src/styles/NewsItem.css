@@ -13,7 +13,7 @@
   transition: background-color 0.2s;
 }
 
-.news-item:hover {
+.news-item-link:hover .news-item {
   background-color: #f7f7f7;
 }
 
@@ -40,9 +40,11 @@
   flex-shrink: 0;
 }
 
-.news-image-container img {
+/* ★ ClickableSpotコンポーネントが画像全体を覆うように調整 */
+.news-image-container .original-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 4px;
+  display: block;
 }

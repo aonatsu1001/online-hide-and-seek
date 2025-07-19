@@ -2,6 +2,7 @@ let socket: WebSocket | null = null;
 let onHidingSpotChosenCallback: ((spotId: string) => void) | null = null;
 let onGameStartCallback: (() => void) | null = null;
 let onRoleUpdateCallback: ((players: any) => void) | null = null;
+let onGameResultCallback: ((result: any) => void) | null = null;
 
 export const initSocket = (roomId: string) => {
   if (socket) {
@@ -29,12 +30,13 @@ export const initSocket = (roomId: string) => {
     if (message.type === 'role_update' && onRoleUpdateCallback) {
       onRoleUpdateCallback(message.players);
     }
-  };
 
-  socket.onerror = (error) => {
-    console.error('WebSocket Error: ', error);
-  };
+
+    if (message.event === 'game_result' && onGameResultCallback) {
+        onGameResultCallback(message.data);
+    }
 };
+}
 
 export const registerHidingSpotChosenCallback = (callback: (spotId: string) => void) => {
   onHidingSpotChosenCallback = callback;
@@ -57,6 +59,23 @@ export const registerRoleUpdateCallback = (callback: (players: any) => void) => 
   };
 };
 
+export const registerGameResultCallback = (callback: (result: any) => void) => {
+    onGameResultCallback = callback;
+    return () => {
+        onGameResultCallback = null;
+    };
+};
+
+// // エラー発生時の処理
+// socket.onerror = (error) => {
+//     console.error('WebSocket Error: ', error);
+// };
+
+/**
+ * 隠れる場所のIDをバックエンドに送信する関数
+ * @param spotId - 選択された場所のID (string)
+ */
+
 export const sendHidingSpotId = (spotId: string) => {
   if (socket && socket.readyState === WebSocket.OPEN) {
     const message = {
@@ -69,4 +88,18 @@ export const sendHidingSpotId = (spotId: string) => {
   } else {
     console.error('WebSocket is not connected.');
   }
+};
+
+export const sendGuess = (spotId: string) => {
+    if (socket.readyState === WebSocket.OPEN) {
+        const message = {
+            event: 'guess',
+            data: {
+                id: spotId,
+            },
+        };
+        socket.send(JSON.stringify(message));
+    } else {
+        console.error('WebSocket is not connected.');
+    }
 };

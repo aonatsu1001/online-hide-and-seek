@@ -38,7 +38,6 @@ import kakuseiImage from '../../assets/stage_elements/stage1/kakusei.png'
 import mannenImage from '../../assets/stage_elements/stage1/mannen.png'
 import mailImage from '../../assets/stage_elements/stage1/mail.png'
 
-
 const Stage1_seeking: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
@@ -51,7 +50,7 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-  };
+  }
 
   const allSpots = [
     { id: 'adoresu', src: adoresuImage, alt: 'アドレス' },
@@ -103,18 +102,21 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
     },
   ]
 
-
   return (
     <>
       <Header />
       <div className="stage-body">
         <SearchBar />
         <div className="content-wrapper">
-          <Sidebar />
+          <Sidebar
+            selectedSpotId={selectedSpotId}
+            onSpotClick={onSpotClick}
+            userIcon={userIcon}
+            userRole={userRole}
+          />
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
               {allSpots.map((spot) => {
-                const isHiddenHere = hidingSpotId === spot.id
                 return (
                   <div
                     className="grid-item"
@@ -138,19 +140,22 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
                       userRole={userRole}
                       hidingSpotId={hidingSpotId}
                     >
-                      <img
-                        src={spot.src}
-                        alt={spot.alt}
-                      />
+                      {/* ★★★ 常に元のアイコン画像を表示するように修正 ★★★ */}
+                      <img src={spot.src} alt={spot.alt} />
                     </ClickableSpot>
                   </div>
-                );
+                )
               })}
             </div>
             <div className="news-feed-container">
               {newsFeed.map((item) => (
                 <NewsItem
                   key={item.id}
+                  id={item.id.toString()} // ★ IDを渡す
+                  isSelected={selectedSpotId === item.id.toString()} // ★ 選択状態を渡す
+                  onClick={onSpotClick} // ★ クリック処理を渡す
+                  userIcon={userIcon} // ★ ユーザーアイコンを渡す
+                  userRole={userRole} // ★ 役割を渡す
                   title={item.title}
                   source={item.source}
                   imageUrl={item.imageUrl}
@@ -162,8 +167,7 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
         </div>
       </div>
     </>
-  );
-};
-
+  )
+}
 
 export default Stage1_seeking

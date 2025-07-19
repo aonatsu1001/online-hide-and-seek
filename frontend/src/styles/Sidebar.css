@@ -1,9 +1,17 @@
 .sidebar-container {
-  width: 200px; /* サイドバーの幅 */
-  flex-shrink: 0; /* 幅が縮まないようにする */
+  width: 200px;
+  flex-shrink: 0;
   background-color: #f7f9fa;
-  padding: 15px 0;
   border-right: 1px solid #e0e0e0;
+}
+
+.sidebar-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  padding: 10px 15px;
+  margin: 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .sidebar-container ul {
@@ -12,21 +20,19 @@
   padding: 0;
 }
 
-.sidebar-container li a {
+.sidebar-item {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 15px;
-  text-decoration: none;
-  color: #333;
-  font-size: 14px;
 }
 
-.sidebar-container li a:hover {
-  background-color: #eaf2f8;
-}
-
-.sidebar-container li img {
+.sidebar-item img {
   width: 20px;
   height: 20px;
+}
+
+.sidebar-item-name {
+  font-size: 14px;
+  color: #333;
 }
