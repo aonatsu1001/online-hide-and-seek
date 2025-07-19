@@ -6,17 +6,17 @@ const Header: React.FC = () => {
     <header className="app-header">
       <div className="logo">オンラインかくれんぼ</div>
       <nav className="navigation-menu">
-        <a href="#">五右衛門の強み</a>
+        <a href="#">マッチングして</a>
         <span className="divider">|</span> {/* ← 区切り線 */}
-        <a href="#">五右衛門の仕事</a>
+        <a href="#">アイコンを隠して</a>
         <span className="divider">|</span> {/* ← 区切り線 */}
-        <a href="#">ブログ・ニュース</a>
+        <a href="#">鬼はアイコンを探して</a>
         <span className="divider">|</span> {/* ← 区切り線 */}
-        <a href="#">企業概要</a>
+        <a href="#">見つけたら鬼の勝ち！</a>
         <span className="divider">|</span> {/* ← 区切り線 */}
-        <a href="#">ご相談の流れ</a>
+        <a href="#">見つからなかったら鬼の負け！</a>
         <a href="#" className="contact-button">
-          お問い合わせ・相談
+
           {/* ↓ ボタン内の矢印アイコン ↓ */}
           <span className="arrow-icon">
             <svg
