@@ -1,6 +1,8 @@
+import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
 from typing import Dict, List
 from backend.app.websocket.connection_manager import ConnectionManager
+from backend.app.game.game_logic import set_hiding_spot_for_room, get_hiding_spot_for_room
 
 # プレイヤー情報 (ルームごとに管理)
 # {room_id: {username: role}}
@@ -26,7 +28,7 @@ async def select_role(data: dict):
     if username and role in ["HIDER", "SEEKER"]:
         rooms_players[room_id][username] = role
         # 役割が更新されたことをルーム内の全クライアントにブロードキャスト
-        await manager.broadcast_to_room(f"{{'type': 'role_update', 'players': {rooms_players[room_id]}}}", room_id)
+        await manager.broadcast_to_room(json.dumps({'type': 'role_update', 'players': rooms_players[room_id]}), room_id)
         return {"message": f"{username} が {role} を選択しました (ルーム: {room_id})"}
     return {"error": "無効なデータです"}
 
@@ -40,12 +42,35 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
     await manager.connect(websocket, room_id) # ConnectionManagerを使って接続、room_idを渡す
     try:
         # 接続時に現在の役割情報を送信
-        await manager.send_personal_message(f"{{'type': 'role_update', 'players': {rooms_players[room_id]}}}", websocket)
+        await manager.send_personal_message(json.dumps({'type': 'role_update', 'players': rooms_players[room_id]}), websocket)
         while True:
             data = await websocket.receive_text()
-            # ここで受信したメッセージ（位置情報、チャットなど）を処理
-            # 例: 受信したメッセージをルーム内の他のクライアントにブロードキャスト
-            await manager.broadcast_to_room(f"{{'type': 'message', 'content': '{data}', 'room_id': '{room_id}'}}", room_id)
+            try:
+                message = json.loads(data)
+                event_type = message.get("event")
+                event_data = message.get("data")
+
+                if event_type == "set_hiding_spot":
+                    hiding_spot_id = event_data.get("id")
+                    if hiding_spot_id:
+                        set_hiding_spot_for_room(room_id, hiding_spot_id)
+                        # 隠れ場所が設定されたことを探す側に通知
+                        hiding_spot_chosen_message = {
+                            "event": "hiding_spot_chosen",
+                            "data": {"id": hiding_spot_id}
+                        }
+                        await manager.broadcast_to_room(json.dumps(hiding_spot_chosen_message), room_id)
+                        print(f"Broadcasted hiding_spot_chosen for room {room_id} with ID: {hiding_spot_id}")
+                    else:
+                        print(f"Received set_hiding_spot event without 'id' in data: {message}")
+                else:
+                    # その他のメッセージは既存のブロードキャストロジックで処理
+                    await manager.broadcast_to_room(json.dumps({'type': 'message', 'content': message, 'room_id': room_id}), room_id)
+            except json.JSONDecodeError:
+                print(f"Received non-JSON message: {data}")
+                # 非JSONメッセージもそのままブロードキャストする（必要であれば）
+                await manager.broadcast_to_room(json.dumps({'type': 'message', 'content': data, 'room_id': room_id}), room_id)
+            
     except WebSocketDisconnect:
         manager.disconnect(websocket, room_id) # ConnectionManagerを使って切断、room_idを渡す
         print(f"WebSocket disconnected: {websocket} from room {room_id}")
