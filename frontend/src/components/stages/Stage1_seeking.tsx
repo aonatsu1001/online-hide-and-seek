@@ -2,7 +2,7 @@ import React from 'react';
 import ClickableSpot from '../ClickableSpot';
 
 // --- このコンポーネントが必要とするデータを親から受け取るための型定義 ---
-interface Stage1SeekingProps {
+interface Stage1Props {
   selectedSpotId: string | null;
   onSpotClick: (id: string) => void;
   userIcon: string;
@@ -16,7 +16,7 @@ import lampImage from '../../assets/stage_elements/stage1/lamp.png';
 // ★ 1. 背景画像をインポートする
 import backgroundImage from '../../assets/stage_elements/stage1/background.png';
 
-const Stage1_seeking: React.FC<Stage1SeekingProps> = ({ selectedSpotId, onSpotClick, userIcon, hiddenSpotId }) => {
+const Stage1_seeking: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon, hiddenSpotId }) => {
   // ★ 2. 背景画像を設定するためのスタイルオブジェクトを作成
   const containerStyle: React.CSSProperties = {
     backgroundImage: `url(${backgroundImage})`,

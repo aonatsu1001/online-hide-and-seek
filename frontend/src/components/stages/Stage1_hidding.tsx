@@ -19,7 +19,7 @@ const Stage1: React.FC<Stage1Props> = ({ selectedSpotId, onSpotClick, userIcon }
   // ★ 2. 背景画像を設定するためのスタイルオブジェクトを作成
   const containerStyle: React.CSSProperties = {
     backgroundImage: `url(${backgroundImage})`, // 背景画像を指定
-    // backgroundSize: 'cover',                   // コンテナ全体を覆うように調整
+    backgroundSize: 'cover',                   // コンテナ全体を覆うように調整
     backgroundPosition: 'center',              // 画像を中央に配置
     backgroundRepeat: 'no-repeat',             // 画像の繰り返しを無効化
     padding: '20px',                           // 内側の余白
