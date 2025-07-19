@@ -7,7 +7,7 @@ interface ClickableSpotProps {
   onClick: (id: string) => void
   children: React.ReactElement<React.ImgHTMLAttributes<HTMLImageElement>>
   userRole?: 'HIDER' | 'SEEKER' | null
-  isHidingSpot?: boolean // この場所が隠れ場所かどうか
+  hidingSpotId?: string | null // Add this prop
 }
 
 const ClickableSpot: React.FC<ClickableSpotProps> = ({
@@ -17,7 +17,7 @@ const ClickableSpot: React.FC<ClickableSpotProps> = ({
   onClick,
   children,
   userRole,
-  isHidingSpot,
+  hidingSpotId, // Destructure the new prop
 }) => {
   const style: React.CSSProperties = {
     cursor: 'pointer',
@@ -28,17 +28,19 @@ const ClickableSpot: React.FC<ClickableSpotProps> = ({
     borderRadius: '8px',
   }
 
+  const isThisHidingSpot = hidingSpotId === id; // Determine if this is the hiding spot
+
   // HIDERが選択したか、またはそこが隠れ場所ならアイコンを表示
-  const shouldShowIcon = (isSelected && userRole === 'HIDER') || isHidingSpot
+  const shouldShowIcon = (isSelected && userRole === 'HIDER') || isThisHidingSpot
 
   const userIconStyle: React.CSSProperties = {
     position: 'absolute',
-    top: 0,
-    left: '10%',
+    top: '0%',
+    left: '20%',
     width: '100%',
     height: '100%',
     zIndex: -1,
-    opacity: shouldShowIcon ? 1 : 0, // 条件に応じて表示
+    opacity: isThisHidingSpot ? 0.3 : (shouldShowIcon ? 1 : 0), // Apply glimpse opacity
     transition: 'opacity 0.2s',
     objectFit: 'contain',
   }
