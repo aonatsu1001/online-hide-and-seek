@@ -1,63 +1,57 @@
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
 from typing import Dict, List
+from backend.app.websocket.connection_manager import ConnectionManager
 
-# プレイヤー情報と接続管理
-players: Dict[str, str] = {}  # 例: {'user1': 'HIDER'}
-connections: List[WebSocket] = []
+# プレイヤー情報 (ルームごとに管理)
+# {room_id: {username: role}}
+rooms_players: Dict[str, Dict[str, str]] = {}
+
+# ConnectionManagerのインスタンスを生成
+manager = ConnectionManager()
 
 router = APIRouter(
-    prefix="/game", # /game プレフィックスをルーターに設定
+    prefix="/game",
     tags=["Game Role Management"]
 )
 
-@router.post("/select-role") # ルーターにプレフィックスを設定したので、ここでは /select-role
+@router.post("/select-role")
 async def select_role(data: dict):
     username = data.get("username")
     role = data.get("role")
+    room_id = data.get("room_id") # room_idもリクエストボディから受け取る
+    
+    if not room_id or room_id not in rooms_players:
+        return {"error": "無効なルームIDです"}
+
     if username and role in ["HIDER", "SEEKER"]:
-        players[username] = role
-        await broadcast_roles()
-        return {"message": f"{username} が {role} を選択しました"}
+        rooms_players[room_id][username] = role
+        # 役割が更新されたことをルーム内の全クライアントにブロードキャスト
+        await manager.broadcast_to_room(f"{{'type': 'role_update', 'players': {rooms_players[room_id]}}}", room_id)
+        return {"message": f"{username} が {role} を選択しました (ルーム: {room_id})"}
     return {"error": "無効なデータです"}
 
-@router.websocket("/ws") # ルーターにプレフィックスを設定したので、ここでは /ws
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    connections.append(websocket)
+@router.websocket("/ws/{room_id}") # room_idをパスパラメータとして受け取る
+async def websocket_endpoint(websocket: WebSocket, room_id: str):
+    # ルームが存在しない場合は、WebSocket接続を拒否するか、ここでルームを作成する
+    # 現時点では、room_routerでルームが作成されていることを前提とする
+    if room_id not in rooms_players:
+        rooms_players[room_id] = {} # 新しいルームのプレイヤー辞書を初期化
+
+    await manager.connect(websocket, room_id) # ConnectionManagerを使って接続、room_idを渡す
     try:
-        await send_roles(websocket)
+        # 接続時に現在の役割情報を送信
+        await manager.send_personal_message(f"{{'type': 'role_update', 'players': {rooms_players[room_id]}}}", websocket)
         while True:
-            # クライアントからのメッセージを受信するループ。
-            # 特定の処理がなければ、接続維持のために待機
-            await websocket.receive_text()
+            data = await websocket.receive_text()
+            # ここで受信したメッセージ（位置情報、チャットなど）を処理
+            # 例: 受信したメッセージをルーム内の他のクライアントにブロードキャスト
+            await manager.broadcast_to_room(f"{{'type': 'message', 'content': '{data}', 'room_id': '{room_id}'}}", room_id)
     except WebSocketDisconnect:
-        print(f"WebSocket disconnected: {websocket}")
-        connections.remove(websocket)
+        manager.disconnect(websocket, room_id) # ConnectionManagerを使って切断、room_idを渡す
+        print(f"WebSocket disconnected: {websocket} from room {room_id}")
     except Exception as e:
         print(f"WebSocket error: {e}")
-        if websocket in connections:
-            connections.remove(websocket)
-
-
-async def send_roles(websocket: WebSocket):
-    await websocket.send_json(players)
-
-async def broadcast_roles():
-    disconnected_connections = []
-    for conn in connections:
-        try:
-            await conn.send_json(players)
-        except RuntimeError as e:
-            print(f"Failed to send to WebSocket (RuntimeError): {e}. Removing connection.")
-            disconnected_connections.append(conn)
-        except Exception as e:
-            print(f"Failed to send to WebSocket (Other Error): {e}. Removing connection.")
-            disconnected_connections.append(conn)
-    
-    # 切断されたコネクションをリストから削除
-    for conn in disconnected_connections:
-        if conn in connections:
-            connections.remove(conn)
+        manager.disconnect(websocket, room_id) # エラー時も切断
 
 # ルートパスにアクセスした際のメッセージ (オプション)
 @router.get("/")
