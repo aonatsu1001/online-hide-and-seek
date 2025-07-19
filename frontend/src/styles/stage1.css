@@ -1,0 +1,41 @@
+/* ステージ全体のレイアウト調整 */
+.stage-layout {
+  /* ★ メニューバー分の余白と、下部の余白を確保 */
+  padding: 100px 20px 40px 20px;
+  box-sizing: border-box;
+}
+
+/* 中央のコンテンツ枠 */
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 25px;
+
+  max-width: 1400px;
+  /* ★ このmargin: 0 auto;で中央配置が実現される */
+  margin: 0 auto;
+
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* グリッド内の各アイテム */
+.grid-item {
+  background-color: #f0f0f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  min-height: 120px;
+  box-sizing: border-box;
+}
+
+/* 各アイテムの画像スタイル */
+.grid-item img {
+  max-width: 100%;
+  max-height: 80%;
+  object-fit: contain;
+}

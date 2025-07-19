@@ -1,15 +1,15 @@
 import React from 'react'
 import ClickableSpot from '../ClickableSpot'
-import './../../styles/stages.css' // ★ 新しいCSSファイルをインポート
+import './../../styles/stage1.css' // cssファイル名を修正
 
-// --- このコンポーネントが必要とするデータ（変更なし） ---
+// --- Propsの定義（変更なし） ---
 interface Stage1Props {
   selectedSpotId: string | null
   onSpotClick: (id: string) => void
   userIcon: string
 }
 
-// --- このステージで使う画像（変更なし） ---
+// --- 画像アセットのインポート（変更なし） ---
 import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png'
 import plantImage from '../../assets/stage_elements/stage1/plant.png'
 import lampImage from '../../assets/stage_elements/stage1/lamp.png'
@@ -21,57 +21,51 @@ import presentImage from '../../assets/stage_elements/stage1/present.png'
 import cameraImage from '../../assets/stage_elements/stage1/camera.png'
 import heartImage from '../../assets/stage_elements/stage1/heart.png'
 import memoImage from '../../assets/stage_elements/stage1/memo.png'
+import manImage from '../../assets/stage_elements/stage1/man.png'
+import docterImage from '../../assets/stage_elements/stage1/docter.png'
+import washokuImage from '../../assets/stage_elements/stage1/washoku.png'
+import rainImage from '../../assets/stage_elements/stage1/rain.png'
 
 const Stage1: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
   userIcon,
 }) => {
-  // 表示するアイテムのリストを定義
-  const spots = [
-    { id: 'bookshelf-left', src: bookshelfImage, alt: '本棚', height: '200px' },
-    { id: 'plant-pot', src: plantImage, alt: '観葉植物', height: '100px' },
-    { id: 'desk-lamp', src: lampImage, alt: '電気スタンド', height: '150px' },
-    { id: 'call', src: callImage, alt: '電話', height: '180px' }, // ← 追加
-    { id: 'web', src: webImage, alt: 'ウェブ', height: '150px' }, // ← 追加
-    { id: 'hint', src: hintImage, alt: 'ヒント', height: '180px' },
-    { id: 'mail', src: mailImage, alt: 'メール', height: '120px' },
-    { id: 'present', src: presentImage, alt: 'プレゼント', height: '150px' },
-    { id: 'camera', src: cameraImage, alt: 'カメラ', height: '120px' },
-    { id: 'heart', src: heartImage, alt: 'ハート', height: '150px' },
-    { id: 'memo', src: memoImage, alt: 'メモ', height: '150px' },
-    // 他のアイテムもここに追加できます
+  // ★ 全ての隠れ場所（装飾アイコン＋スクロール要素）を一つの配列に統合
+  const allSpots = [
+    { id: 'bookshelf-1', src: bookshelfImage, alt: '本棚1' },
+    { id: 'plant-1', src: plantImage, alt: '観葉植物1' },
+    { id: 'lamp-1', src: lampImage, alt: '電気スタンド1' },
+    { id: 'call', src: callImage, alt: '電話' },
+    { id: 'web', src: webImage, alt: 'ウェブ' },
+    { id: 'mail', src: mailImage, alt: 'メール' },
+    { id: 'hint', src: hintImage, alt: 'ヒント' },
+    { id: 'present', src: presentImage, alt: 'プレゼント' },
+    { id: 'camera', src: cameraImage, alt: 'カメラ' },
+    { id: 'heart', src: heartImage, alt: 'ハート' },
+    { id: 'memo', src: memoImage, alt: 'メモ' },
+    { id: 'man', src: manImage, alt: '男性' },
+    { id: 'docter', src: docterImage, alt: '医者' },
+    { id: 'washoku', src: washokuImage, alt: '和食' },
+    { id: 'rain', src: rainImage, alt: '雨' },
   ]
 
   return (
     <div className="stage-layout">
-      {/* 画面上部のコンテンツ */}
-      <div className="stage-header">
-        <h1>ハッカソン会場</h1>
-        <p>隠れたい場所をクリックして選択してください。</p>
-      </div>
-
-      {/* 画面下部の自動スクロールコンテナ */}
-      <div className="scrolling-tray-container">
-        <div className="scrolling-tray">
-          {/* 無限スクロールのために、リストを2回レンダリングする */}
-          {[...spots, ...spots].map((spot, index) => (
-            <div className="tray-item" key={`${spot.id}-${index}`}>
-              <ClickableSpot
-                id={spot.id}
-                userIcon={userIcon}
-                isSelected={selectedSpotId === spot.id}
-                onClick={onSpotClick}
-              >
-                <img
-                  src={spot.src}
-                  alt={spot.alt}
-                  style={{ height: spot.height }}
-                />
-              </ClickableSpot>
-            </div>
-          ))}
-        </div>
+      {/* ★ 全ての隠れ場所をグリッド表示するコンテナ */}
+      <div className="content-grid">
+        {allSpots.map((spot) => (
+          <div className="grid-item" key={spot.id}>
+            <ClickableSpot
+              id={spot.id}
+              userIcon={userIcon}
+              isSelected={selectedSpotId === spot.id}
+              onClick={onSpotClick}
+            >
+              <img src={spot.src} alt={spot.alt} />
+            </ClickableSpot>
+          </div>
+        ))}
       </div>
     </div>
   )

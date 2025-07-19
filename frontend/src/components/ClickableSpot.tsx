@@ -1,44 +1,48 @@
-import React from 'react';
+import React from 'react'
 
 interface ClickableSpotProps {
-  id: string; // サイト制作者が割り当てるユニークID
-  userIcon: string; // 差し替え用のユーザーアイコン画像
-  isSelected: boolean; // この場所が選択されているか（親コンポーネントが管理）
-  onClick: (id: string) => void; // クリックされたことを親に通知する関数
-  children: React.ReactNode; // サイト制作者が配置する元の画像や要素
+  id: string
+  userIcon: string
+  isSelected: boolean
+  onClick: (id: string) => void
+  // ★ childrenの型を、img要素のpropsを持つReact要素に限定する
+  children: React.ReactElement<React.ImgHTMLAttributes<HTMLImageElement>>
 }
 
-const ClickableSpot: React.FC<ClickableSpotProps> = ({ id, userIcon, isSelected, onClick, children }) => {
+const ClickableSpot: React.FC<ClickableSpotProps> = ({
+  id,
+  userIcon,
+  isSelected,
+  onClick,
+  children,
+}) => {
+  const content = isSelected
+    ? // ★ 型が具体的になったので、`as React.ReactElement` という型アサーションが不要になる
+      React.cloneElement(children, { src: userIcon, alt: 'Selected Spot' })
+    : children
 
-    // isSelectedがtrueの場合、children（元のimg要素）をクローンし、
-    // srcプロパティだけをuserIconに差し替える
-    const content = (
-        // isSelectedがtrueでもfalseでも、childrenがReact要素であることを確認
-        React.isValidElement(children) && isSelected
-        ? React.cloneElement(children as React.ReactElement, { src: userIcon, alt: 'Selected Spot' })
-        : children
-    );
-
-const style: React.CSSProperties = {
+  const style: React.CSSProperties = {
     cursor: 'pointer',
-    display: 'inline-block', // 元の要素のサイズに合わせる
+    display: 'inline-block',
     position: 'relative',
     transition: 'transform 0.2s',
-    outline: isSelected ? '3px solid #00A3FF' : 'none', // 選択されていることを視覚的に示す
+    outline: isSelected ? '3px solid #00A3FF' : 'none',
     outlineOffset: '2px',
-    borderRadius: '8px', // アウトラインを角丸に
-};
+    borderRadius: '8px',
+  }
 
-return (
+  return (
     <div
-    style={style}
-    onClick={() => onClick(id)}
-    onMouseOver={(e) => { if (!isSelected) e.currentTarget.style.transform = 'scale(1.05)'; }}
-    onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      style={style}
+      onClick={() => onClick(id)}
+      onMouseOver={(e) => {
+        if (!isSelected) e.currentTarget.style.transform = 'scale(1.05)'
+      }}
+      onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
     >
-    {content}
+      {content}
     </div>
-);
-};
+  )
+}
 
-export default ClickableSpot;
+export default ClickableSpot
