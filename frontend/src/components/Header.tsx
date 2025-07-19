@@ -4,7 +4,7 @@ import './../styles/Header.css' // これから作成するCSSファイルをイ
 const Header: React.FC = () => {
   return (
     <header className="app-header">
-      <div className="logo">GOEMON</div>
+      <div className="logo">オンラインかくれんぼ</div>
       <nav className="navigation-menu">
         <a href="#">五右衛門の強み</a>
         <span className="divider">|</span> {/* ← 区切り線 */}
