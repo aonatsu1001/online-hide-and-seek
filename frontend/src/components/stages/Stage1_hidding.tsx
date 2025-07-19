@@ -3,7 +3,8 @@ import Header from '../Header'
 import SearchBar from '../SearchBar'
 import Sidebar from '../Sidebar'
 import ClickableSpot from '../ClickableSpot'
-import './../../styles/stage1.css'
+import NewsItem from '../NewsItem'
+import '../../styles/stage1.css'
 
 // --- Propsの定義 ---
 interface Stage1Props {
@@ -29,15 +30,16 @@ import opereImage from '../../assets/stage_elements/stage1/opere.png'
 import washokuImage from '../../assets/stage_elements/stage1/washoku.png'
 import teamImage from '../../assets/stage_elements/stage1/team.png'
 import tetyouImage from '../../assets/stage_elements/stage1/tetyou.png'
-// ★ 1. 背景画像をインポート
 import backgroundImage from '../../assets/stage_elements/stage1/background.png'
-
-const Stage1: React.FC<Stage1Props> = ({
+import zenmaiImage from '../../assets/stage_elements/stage1/zenmai.png'
+import kakuseiImage from '../../assets/stage_elements/stage1/kakusei.png'
+import mannenImage from '../../assets/stage_elements/stage1/mannen.png'
+import mailImage from '../../assets/stage_elements/stage1/mail.png'
+const Stage1_hidding: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
   userIcon,
 }) => {
-  // ★ 2. 背景画像を設定するためのスタイルオブジェクトを作成
   const backgroundStyle: React.CSSProperties = {
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
@@ -45,7 +47,6 @@ const Stage1: React.FC<Stage1Props> = ({
     backgroundRepeat: 'no-repeat',
   }
 
-  // 全ての隠れ場所を一つの配列に統合
   const allSpots = [
     { id: 'adoresu', src: adoresuImage, alt: 'アドレス' },
     { id: 'akazukin', src: akazukinImage, alt: '赤ずきん' },
@@ -65,6 +66,37 @@ const Stage1: React.FC<Stage1Props> = ({
     { id: 'tetyou', src: tetyouImage, alt: '手帳' },
   ]
 
+  const newsFeed = [
+    {
+      id: 1,
+      title: '体重「51キロ」のアンゴラ村長 変ぼうした現在の姿',
+      source: 'スポーツ報知',
+      imageUrl: zenmaiImage,
+      href: '#',
+    },
+    {
+      id: 2,
+      title: '妊娠中の中川翔子、セブ島での水着姿に反響',
+      source: 'ABEMA TIMES',
+      imageUrl: kakuseiImage,
+      href: '#',
+    },
+    {
+      id: 3,
+      title: '和田アキ子「恒例のって言ったら変だけど」手術を受けたと明かす',
+      source: 'スポニチアネックス',
+      imageUrl: mannenImage,
+      href: '#',
+    },
+    {
+      id: 4,
+      title: '50歳女優、写真添え『わが家の三女』との別れを報告',
+      source: '中日スポーツ',
+      imageUrl: mailImage,
+      href: '#',
+    },
+  ]
+
   return (
     <>
       <Header />
@@ -72,7 +104,6 @@ const Stage1: React.FC<Stage1Props> = ({
         <SearchBar />
         <div className="content-wrapper">
           <Sidebar />
-          {/* ★ 3. 作成したスタイルを main タグに適用 */}
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
               {allSpots.map((spot) => (
@@ -82,10 +113,22 @@ const Stage1: React.FC<Stage1Props> = ({
                     userIcon={userIcon}
                     isSelected={selectedSpotId === spot.id}
                     onClick={onSpotClick}
+                    userRole={'HIDER'}
                   >
                     <img src={spot.src} alt={spot.alt} />
                   </ClickableSpot>
                 </div>
+              ))}
+            </div>
+            <div className="news-feed-container">
+              {newsFeed.map((item) => (
+                <NewsItem
+                  key={item.id}
+                  title={item.title}
+                  source={item.source}
+                  imageUrl={item.imageUrl}
+                  href={item.href}
+                />
               ))}
             </div>
           </main>
@@ -95,4 +138,4 @@ const Stage1: React.FC<Stage1Props> = ({
   )
 }
 
-export default Stage1
+export default Stage1_hidding

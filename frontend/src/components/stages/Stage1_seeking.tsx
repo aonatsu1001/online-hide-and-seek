@@ -2,15 +2,15 @@ import React from 'react'
 import Header from '../Header'
 import SearchBar from '../SearchBar'
 import Sidebar from '../Sidebar'
-import ClickableSpot from '../ClickableSpot' // `ClickableSpot` のパスを統一
-import './../../styles/stage1.css'
+import ClickableSpot from '../ClickableSpot'
+import NewsItem from '../NewsItem'
+import '../../styles/stage1.css'
 
 // --- Propsの定義 ---
 interface Stage1Props {
   selectedSpotId: string | null
   onSpotClick: (id: string) => void
   userIcon: string
-  // ★ seekingの機能に必要なpropsを追加
   hidingSpotId: string | null
   userRole: 'HIDER' | 'SEEKER' | null
 }
@@ -32,18 +32,19 @@ import opereImage from '../../assets/stage_elements/stage1/opere.png'
 import washokuImage from '../../assets/stage_elements/stage1/washoku.png'
 import teamImage from '../../assets/stage_elements/stage1/team.png'
 import tetyouImage from '../../assets/stage_elements/stage1/tetyou.png'
-
 import backgroundImage from '../../assets/stage_elements/stage1/background.png'
+import zenmaiImage from '../../assets/stage_elements/stage1/zenmai.png'
+import kakuseiImage from '../../assets/stage_elements/stage1/kakusei.png'
+import mannenImage from '../../assets/stage_elements/stage1/mannen.png'
+import mailImage from '../../assets/stage_elements/stage1/mail.png'
 
-const Stage1: React.FC<Stage1Props> = ({
+const Stage1_seeking: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
   userIcon,
-  // ★ 新しいpropsを受け取る
   hidingSpotId,
   userRole,
 }) => {
-  // 背景画像用のスタイル
   const backgroundStyle: React.CSSProperties = {
     backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
@@ -51,19 +52,6 @@ const Stage1: React.FC<Stage1Props> = ({
     backgroundRepeat: 'no-repeat',
   }
 
-  // ★ 選択されたアイテムをハイライトするためのスタイルを返す関数
-  const getGridItemStyle = (spotId: string): React.CSSProperties => ({
-    // 選択されているアイテムに黄色いボーダーと背景色を適用
-    border:
-      selectedSpotId === spotId ? '4px solid #ffde59' : '4px solid transparent',
-    borderRadius: '10px',
-    padding: '5px',
-    backgroundColor:
-      selectedSpotId === spotId ? 'rgba(255, 222, 89, 0.2)' : 'transparent',
-    transition: 'all 0.2s ease-in-out',
-  })
-
-  // 全ての隠れ場所のデータ
   const allSpots = [
     { id: 'adoresu', src: adoresuImage, alt: 'アドレス' },
     { id: 'akazukin', src: akazukinImage, alt: '赤ずきん' },
@@ -83,6 +71,37 @@ const Stage1: React.FC<Stage1Props> = ({
     { id: 'tetyou', src: tetyouImage, alt: '手帳' },
   ]
 
+  const newsFeed = [
+    {
+      id: 1,
+      title: '体重「51キロ」のアンゴラ村長 変ぼうした現在の姿',
+      source: 'スポーツ報知',
+      imageUrl: zenmaiImage,
+      href: '#',
+    },
+    {
+      id: 2,
+      title: '妊娠中の中川翔子、セブ島での水着姿に反響',
+      source: 'ABEMA TIMES',
+      imageUrl: kakuseiImage,
+      href: '#',
+    },
+    {
+      id: 3,
+      title: '和田アキ子「恒例のって言ったら変だけど」手術を受けたと明かす',
+      source: 'スポニチアネックス',
+      imageUrl: mannenImage,
+      href: '#',
+    },
+    {
+      id: 4,
+      title: '50歳女優、写真添え『わが家の三女』との別れを報告',
+      source: '中日スポーツ',
+      imageUrl: mailImage,
+      href: '#',
+    },
+  ]
+
   return (
     <>
       <Header />
@@ -91,36 +110,31 @@ const Stage1: React.FC<Stage1Props> = ({
         <div className="content-wrapper">
           <Sidebar />
           <main className="main-content" style={backgroundStyle}>
-            {/*
-              hiding/seekingでテキストを出し分ける場合の参考例
-              <h1>ハッカソン会場</h1>
-              <p>
-                {userRole === 'SEEKER'
-                  ? '隠れている場所を探してください。'
-                  : '隠れたい場所をクリックして選択してください。'}
-              </p>
-            */}
             <div className="content-grid">
               {allSpots.map((spot) => {
-                // ★ この場所が隠れている場所かどうかを判定
                 const isHiddenHere = hidingSpotId === spot.id
-
                 return (
-                  // ★ ハイライト用のスタイルを適用
                   <div
                     className="grid-item"
                     key={spot.id}
-                    style={getGridItemStyle(spot.id)}
+                    style={
+                      selectedSpotId === spot.id
+                        ? {
+                            border: '4px solid #ffde59',
+                            borderRadius: '10px',
+                            padding: '5px',
+                            backgroundColor: 'rgba(255, 222, 89, 0.2)',
+                          }
+                        : { border: '4px solid transparent' }
+                    }
                   >
                     <ClickableSpot
                       id={spot.id}
                       userIcon={userIcon}
                       isSelected={selectedSpotId === spot.id}
                       onClick={onSpotClick}
-                      // ★ userRole を渡す
                       userRole={userRole}
                     >
-                      {/* ★ isHiddenHereがtrueならuserIconを、falseならspot.srcを表示 */}
                       <img
                         src={isHiddenHere ? userIcon : spot.src}
                         alt={spot.alt}
@@ -130,6 +144,17 @@ const Stage1: React.FC<Stage1Props> = ({
                 )
               })}
             </div>
+            <div className="news-feed-container">
+              {newsFeed.map((item) => (
+                <NewsItem
+                  key={item.id}
+                  title={item.title}
+                  source={item.source}
+                  imageUrl={item.imageUrl}
+                  href={item.href}
+                />
+              ))}
+            </div>
           </main>
         </div>
       </div>
@@ -137,4 +162,4 @@ const Stage1: React.FC<Stage1Props> = ({
   )
 }
 
-export default Stage1
+export default Stage1_seeking
