@@ -7,10 +7,6 @@ body {
   background-attachment: fixed;
 }
 
-.app-container {
-  padding-top: 70px; /* 固定ヘッダー分の余白 */
-}
-
 .app-body {
   max-width: 1600px;
   margin: 0 auto;

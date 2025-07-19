@@ -1,15 +1,18 @@
 import React from 'react'
+import Header from '../Header'
+import SearchBar from '../SearchBar'
+import Sidebar from '../Sidebar'
 import ClickableSpot from '../ClickableSpot_sena'
-import './../../styles/stage1.css' // cssファイル名を修正
+import './../../styles/stage1.css'
 
-// --- Propsの定義（変更なし） ---
+// --- Propsの定義 ---
 interface Stage1Props {
   selectedSpotId: string | null
   onSpotClick: (id: string) => void
   userIcon: string
 }
 
-// --- 画像アセットのインポート（変更なし） ---
+// --- 画像アセットのインポート ---
 import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png'
 import plantImage from '../../assets/stage_elements/stage1/plant.png'
 import lampImage from '../../assets/stage_elements/stage1/lamp.png'
@@ -32,7 +35,7 @@ const Stage1: React.FC<Stage1Props> = ({
   onSpotClick,
   userIcon,
 }) => {
-  // ★ 全ての隠れ場所（装飾アイコン＋スクロール要素）を一つの配列に統合
+  // 全ての隠れ場所を一つの配列に統合
   const allSpots = [
     { id: 'bookshelf-1', src: bookshelfImage, alt: '本棚1' },
     { id: 'plant-1', src: plantImage, alt: '観葉植物1' },
@@ -53,23 +56,31 @@ const Stage1: React.FC<Stage1Props> = ({
   ]
 
   return (
-    <div className="stage-layout">
-      {/* ★ 全ての隠れ場所をグリッド表示するコンテナ */}
-      <div className="content-grid">
-        {allSpots.map((spot) => (
-          <div className="grid-item" key={spot.id}>
-            <ClickableSpot
-              id={spot.id}
-              userIcon={userIcon}
-              isSelected={selectedSpotId === spot.id}
-              onClick={onSpotClick}
-            >
-              <img src={spot.src} alt={spot.alt} />
-            </ClickableSpot>
-          </div>
-        ))}
+    <>
+      <Header />
+      <div className="stage-body">
+        <SearchBar />
+        <div className="content-wrapper">
+          <Sidebar />
+          <main className="main-content">
+            <div className="content-grid">
+              {allSpots.map((spot) => (
+                <div className="grid-item" key={spot.id}>
+                  <ClickableSpot
+                    id={spot.id}
+                    userIcon={userIcon}
+                    isSelected={selectedSpotId === spot.id}
+                    onClick={onSpotClick}
+                  >
+                    <img src={spot.src} alt={spot.alt} />
+                  </ClickableSpot>
+                </div>
+              ))}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
