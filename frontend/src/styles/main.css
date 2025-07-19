@@ -1,11 +1,25 @@
-.app-background {
-  position: absolute; /* 絶対位置指定 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../assets/images/background.png'); /* 画像ファイルを指定 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-image: url('../assets/stage_elements/stage1/background.png');
   background-size: cover;
-  background-position: center;
-  z-index: -1; /* この要素を最背面に配置する */
+  background-attachment: fixed;
+}
+
+.app-body {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px; /* 左右に少し余白を持たせる */
+}
+
+/* ★ サイドバーとメインコンテンツを横並びにするためのコンテナ */
+.content-wrapper {
+  display: flex;
+  margin-top: 20px; /* 検索バーとの間に余白を追加 */
+  gap: 20px; /* サイドバーとメインコンテンツの間の隙間 */
+}
+
+.main-content {
+  flex-grow: 1; /* 残りの幅をすべて使う */
 }
