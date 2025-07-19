@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import '../styles/LobbyPage.css' // ★ 作成したCSSをインポート
+import '../styles/LobbyPage.css'
 
 interface LobbyPageProps {
   onRoomJoined: (roomId: string, userId: string) => void
+  onNavigateToHowToPlay: () => void // ★ 追加
 }
 
-const LobbyPage: React.FC<LobbyPageProps> = ({ onRoomJoined }) => {
+const LobbyPage: React.FC<LobbyPageProps> = ({
+  onRoomJoined,
+  onNavigateToHowToPlay,
+}) => {
   const [roomId, setRoomId] = useState('')
   const [userId] = useState(`user_${Math.random().toString(36).substring(7)}`)
   const [isLoading, setIsLoading] = useState(false)
@@ -71,17 +75,25 @@ const LobbyPage: React.FC<LobbyPageProps> = ({ onRoomJoined }) => {
 
       <div className="lobby-actions">
         <div className="room-creation">
-          <button onClick={handleCreateRoom} disabled={isLoading}>
+          {/* ★ クラス名を追加 */}
+          <button
+            onClick={handleCreateRoom}
+            disabled={isLoading}
+            className="lobby-button"
+          >
             {isLoading ? '作成中...' : '新しいルームを作成する'}
           </button>
         </div>
         <hr />
         <div className="room-join">
-          {/* ★ ボタンを先(上)に移動 */}
-          <button onClick={handleJoinRoom} disabled={isLoading}>
+          {/* ★ クラス名を追加 */}
+          <button
+            onClick={handleJoinRoom}
+            disabled={isLoading}
+            className="lobby-button"
+          >
             {isLoading ? '参加中...' : 'ルームに参加する'}
           </button>
-          {/* ★ 入力欄を後(下)に移動し、クラス名を追加 */}
           <input
             type="text"
             className="lobby-input"
@@ -90,6 +102,12 @@ const LobbyPage: React.FC<LobbyPageProps> = ({ onRoomJoined }) => {
             placeholder="ルームIDを入力"
             disabled={isLoading}
           />
+          <button
+            onClick={onNavigateToHowToPlay}
+            className="how-to-play-button"
+          >
+            遊び方
+          </button>
         </div>
       </div>
     </div>
