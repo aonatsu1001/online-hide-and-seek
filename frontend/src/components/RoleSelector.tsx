@@ -39,6 +39,9 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({ username, roomId }) => {
     
     return (
     <div className="role-selection-container">
+    <div style={{ marginBottom: '1rem', padding: '0.5rem 1rem', backgroundColor: '#f0f0f0', borderRadius: '8px', border: '1px solid #ddd' }}>
+      <p style={{ margin: 0, fontWeight: 'bold' }}>ルームID: <span style={{ color: '#007bff' }}>{roomId}</span></p>
+    </div>
     <h2>役割を選択してください</h2>
     <div className="button-group">
         <button

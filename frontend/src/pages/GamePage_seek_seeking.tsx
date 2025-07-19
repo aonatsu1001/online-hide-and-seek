@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ConfirmButton from '../components/ConfirmButton';
 import Stage1_seeking from '../components/stages/Stage1_seeking';
 import GameUI from '../components/GameUI';
+import Loading from '../components/Loading';
 
 // --- アセットのインポート ---
 import myIcon from '../assets/icons/user_icon.png';
@@ -36,6 +37,10 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
             setGuessesLeft(prev => prev - 1);
         }
     };
+
+    if (!hidingSpotId) {
+        return <Loading />;
+    }
 
     return (
         <div>
