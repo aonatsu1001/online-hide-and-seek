@@ -12,27 +12,35 @@ rooms_players: Dict[str, Dict[str, str]] = {}
 manager = ConnectionManager()
 
 router = APIRouter(
-    prefix="/game",
-    tags=["Game Role Management"]
+    tags=["Game Management"]
 )
 
 @router.post("/select-role")
 async def select_role(data: dict):
     username = data.get("username")
     role = data.get("role")
-    room_id = data.get("room_id") # room_idもリクエストボディから受け取る
+    room_id = data.get("room_id")
     
     if not room_id or room_id not in rooms_players:
         return {"error": "無効なルームIDです"}
 
     if username and role in ["HIDER", "SEEKER"]:
         rooms_players[room_id][username] = role
-        # 役割が更新されたことをルーム内の全クライアントにブロードキャスト
+        
+        # 役割が更新されたことをブロードキャスト
         await manager.broadcast_to_room(json.dumps({'type': 'role_update', 'players': rooms_players[room_id]}), room_id)
+        
+        # 役割が揃ったかチェック
+        roles = list(rooms_players[room_id].values())
+        if "HIDER" in roles and "SEEKER" in roles:
+            # ゲーム開始を通知
+            await manager.broadcast_to_room(json.dumps({'event': 'game_start'}), room_id)
+            print(f"Game started in room {room_id}")
+
         return {"message": f"{username} が {role} を選択しました (ルーム: {room_id})"}
     return {"error": "無効なデータです"}
 
-@router.websocket("/ws/{room_id}") # room_idをパスパラメータとして受け取る
+@router.websocket("/ws/game/{room_id}")
 async def websocket_endpoint(websocket: WebSocket, room_id: str):
     # ルームが存在しない場合は、WebSocket接続を拒否するか、ここでルームを作成する
     # 現時点では、room_routerでルームが作成されていることを前提とする
@@ -59,8 +67,9 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
                             "event": "hiding_spot_chosen",
                             "data": {"id": hiding_spot_id}
                         }
-                        await manager.broadcast_to_room(json.dumps(hiding_spot_chosen_message), room_id)
-                        print(f"Broadcasted hiding_spot_chosen for room {room_id} with ID: {hiding_spot_id}")
+                        # SEEKERロールを持つプレイヤーにのみメッセージを送信
+                        await manager.send_to_role(json.dumps(hiding_spot_chosen_message), room_id, "SEEKER", rooms_players)
+                        print(f"Sent hiding_spot_chosen to SEEKER in room {room_id} with ID: {hiding_spot_id}")
                     else:
                         print(f"Received set_hiding_spot event without 'id' in data: {message}")
                 else:

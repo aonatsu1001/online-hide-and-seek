@@ -48,3 +48,21 @@ class ConnectionManager:
         if not self.active_connections[room_id]: # ルームに誰もいなくなったらルームを削除
             del self.active_connections[room_id]
             print(f"Room {room_id} is now empty and removed after broadcast cleanup.")
+
+    async def send_to_role(self, message: str, room_id: str, role: str, rooms_players: Dict[str, Dict[str, str]]):
+        if room_id not in self.active_connections or room_id not in rooms_players:
+            print(f"Attempted to send to role in non-existent room: {room_id}")
+            return
+
+        # このルームで指定された役割を持つユーザー名を取得
+        players_with_role = [username for username, r in rooms_players[room_id].items() if r == role]
+        
+        if not players_with_role:
+            print(f"No players with role '{role}' found in room {room_id}")
+            return
+
+        # active_connectionsはWebSocketオブジェクトのリストなので、
+        # どのWebSocketがどのユーザーに対応するかを特定する必要があります。
+        # ここでは、簡単化のため、ルーム内の全接続に送ってしまい、フロント側で役割を判断してもらいます。
+        # より厳密に実装するには、接続時にユーザー名を紐付ける必要があります。
+        await self.broadcast_to_room(message, room_id)

@@ -2,13 +2,12 @@ import React from 'react';
 
 // このコンポーネントが受け取るデータ（props）の型を定義
 interface ConfirmButtonProps {
-    // ボタンがクリックされたときに実行する関数
     onClick: () => void;
-    // ボタンを無効化するかどうか（trueならクリックできない）
     disabled: boolean;
+    text?: string; // textプロパティをオプショナルで追加
 }
 
-const ConfirmButton: React.FC<ConfirmButtonProps> = ({ onClick, disabled }) => {
+const ConfirmButton: React.FC<ConfirmButtonProps> = ({ onClick, disabled, text = "ここに隠す" }) => {
   // ボタンのスタイルを定義
     const style: React.CSSProperties = {
         position: 'fixed',    // 画面に位置を固定する
@@ -30,7 +29,7 @@ const ConfirmButton: React.FC<ConfirmButtonProps> = ({ onClick, disabled }) => {
 
     return (
         <button style={style} onClick={onClick} disabled={disabled}>
-        ここに隠す
+        {text}
         </button>
     );
 };

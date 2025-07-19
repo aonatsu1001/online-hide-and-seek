@@ -1,4 +1,7 @@
 from typing import Dict
+from fastapi import APIRouter
+
+router = APIRouter()
 
 # 隠された場所のオブジェクトIDをルームごとに保存する辞書
 # {room_id: "object_id"}

@@ -16,9 +16,16 @@ app = FastAPI(
 )
 
 # CORSミドルウェアの設定
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:5173", # Viteのデフォルトポート
+    "http://localhost:8080",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # フロントエンドのURL
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
