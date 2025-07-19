@@ -10,11 +10,23 @@ socket.onopen = () => {
     console.log('Successfully connected to the WebSocket server.');
 };
 
+let onHidingSpotChosenCallback: ((spotId: string) => void) | null = null;
+
 // サーバーからメッセージを受信した時の処理
 socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
     console.log('Message from server: ', message);
-  // ここでサーバーからの指示に応じてUIを更新する処理などを書く
+
+    if (message.event === 'hiding_spot_chosen' && onHidingSpotChosenCallback) {
+        onHidingSpotChosenCallback(message.data.id);
+    }
+};
+
+export const registerHidingSpotChosenCallback = (callback: (spotId: string) => void) => {
+    onHidingSpotChosenCallback = callback;
+    return () => {
+        onHidingSpotChosenCallback = null;
+    };
 };
 
 // エラー発生時の処理
