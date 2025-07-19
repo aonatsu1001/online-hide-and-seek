@@ -1,65 +1,114 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { registerGameStartCallback, registerRoleUpdateCallback } from './services/socketService';
 import './App.css';
 import './styles/main.css';
-import GamePage_hide_hidding from './pages/GamePage_hide_hidding.tsx';
-import GamePage_hide_seeking from './pages/GamePage_hide_seeking.tsx';
-import GamePage_seek_hidding from './pages/GamePage_seek_hidding.tsx';
-import GamePage_seek_seeking from './pages/GamePage_seek_seeking.tsx';
-import RoleSelector from './components/RoleSelector.tsx';
 
-type GameState = 'role-selection' | 'hidding' | 'seeking';
-type Role = 'hider' | 'seeker' | null;
+// --- 各ページのコンポーネントをインポート ---
+// import LobbyPage from './pages/LobbyPage.tsx';
+import RoleSelector from './components/RoleSelector.tsx';
+// 【追加】新しい4つのゲーム画面コンポーネントをインポート
+import GamePageHideHidding from './pages/GamePage_hide_hidding.tsx';
+import GamePageSeekHidding from './pages/GamePage_seek_hidding.tsx';
+import GamePageHideSeeking from './pages/GamePage_hide_seeking.tsx';
+import GamePageSeekSeeking from './pages/GamePage_seek_seeking.tsx';
+
+
+// 【変更】API仕様書に合わせて、役割の型を大文字に定義
+type PlayerRole = 'HIDER' | 'SEEKER';
+// 【変更】ゲームの状態をより詳細に定義
+type GameState = 'LOBBY' | 'ROLE_SELECT' | 'HIDING_PHASE' | 'SEEKING_PHASE' | 'RESULT_PHASE';
 
 function App() {
-    const [gameState, setGameState] = useState<GameState>('role-selection');
-    const [role, setRole] = useState<Role>(null);
-    const [hidingSpotId, setHidingSpotId] = useState<string | null>(null);
+  const [gameState, setGameState] = useState<GameState>('LOBBY');
+  const [userRole, setUserRole] = useState<PlayerRole | null>(null);
+  const [hidingSpotId, setHidingSpotId] = useState<string | null>(null);
+  // 各タブでユニークなユーザー名を生成
+  const [username] = useState(`user_${Math.random().toString(36).substring(7)}`);
+  const roomId = "test_room";
 
-    const handleRoleSelect = (selectedRole: Role) => {
-        setRole(selectedRole);
-        setGameState('hidding');
+  // --- State更新関数 ---
+
+  // マッチング完了 -> 役割選択へ
+  const handleMatchingComplete = () => {
+    setGameState('ROLE_SELECT');
+  };
+
+  useEffect(() => {
+    const gameStartCleanup = registerGameStartCallback(() => {
+      console.log('App.tsx: ゲーム開始の合図を受け取りました。隠れる時間へ移行します。');
+      setGameState('HIDING_PHASE');
+    });
+
+    const roleUpdateCleanup = registerRoleUpdateCallback((players) => {
+      if (players[username]) {
+        setUserRole(players[username]);
+      }
+    });
+
+    return () => {
+      gameStartCleanup();
+      roleUpdateCleanup();
     };
+  }, [username]);
 
-    const handleHidingSpotConfirmed = () => {
-        setGameState('seeking');
-    };
+  // 【追加】隠れる時間終了 -> 探す時間へ
+  const handleHidingTimeEnd = (spotId: string | null) => {
+    console.log("App.tsx: 隠れる時間が終了しました。探す時間へ移行します。");
+    setHidingSpotId(spotId);
+    setGameState('SEEKING_PHASE');
+  };
 
-    const handleHidingSpotChosen = (spotId: string) => {
-        setHidingSpotId(spotId);
-        setGameState('seeking');
-    };
+  // 探す側が隠れ場所IDを受け取った時の処理
+  const handleHidingSpotChosen = (spotId: string) => {
+    console.log(`App.tsx: 隠れ場所「${spotId}」を受け取りました。探す時間へ移行します。`);
+    setHidingSpotId(spotId);
+    setGameState('SEEKING_PHASE');
+  };
 
-    const renderGamePage = () => {
-        if (gameState === 'role-selection') {
-            // return <RoleSelector onRoleSelect={handleRoleSelect} />;
-            // とりあえずhider固定で進める
-            handleRoleSelect('hider');
+  // 【変更】現在のゲーム状態に基づいてCSSクラス名を返す関数
+  const getBackgroundClass = () => {
+    // ゲーム中の画面（隠れる時間、探す時間など）の場合
+    if (gameState === 'HIDING_PHASE' || gameState === 'SEEKING_PHASE' || gameState === 'RESULT_PHASE') {
+      return 'in-game-background';
+    }
+    // それ以外（ロビー、役割選択）の場合
+    return 'lobby-background';
+  };
+
+  // --- 表示するページの振り分け ---
+  const renderPage = () => {
+    switch (gameState) {
+      case 'LOBBY':
+        return <RoleSelector username={username} roomId={roomId} />;
+      
+      case 'ROLE_SELECT':
+        return <RoleSelector username={username} roomId={roomId} />;
+      
+      case 'HIDING_PHASE':
+        if (userRole === 'HIDER') {
+          // ★「隠れる側」を選択した場合は、完成しているコンポーネントを表示
+          return <GamePageHideHidding onTimeEnd={handleHidingTimeEnd} />;
+        } else { // SEEKERの場合
+          return <GamePageSeekHidding onHidingSpotChosen={handleHidingSpotChosen} />;
         }
 
-        if (role === 'hider') {
-            if (gameState === 'hidding') {
-                return <GamePage_hide_hidding onHidingSpotConfirmed={handleHidingSpotConfirmed} />;
-            } else { // seeking
-                return <GamePage_hide_seeking hidingSpotId={hidingSpotId} />;
-            }
+      case 'SEEKING_PHASE':
+        if (userRole === 'HIDER') {
+          return <GamePageHideSeeking hidingSpotId={hidingSpotId} userRole={userRole} />;
+        } else { // SEEKERの場合
+          return <GamePageSeekSeeking hidingSpotId={hidingSpotId} userRole={userRole} />;
         }
 
-        if (role === 'seeker') {
-            if (gameState === 'hidding') {
-                return <GamePage_seek_hidding onHidingSpotChosen={handleHidingSpotChosen} />;
-            } else { // seeking
-                return <GamePage_seek_seeking hidingSpotId={hidingSpotId} />;
-            }
-        }
+      default:
+        return <div>エラーが発生しました。</div>;
+    }
+  };
 
-        return <div>エラーが発生しました。役割を選択してください。</div>;
-    };
-
-    return (
-        <div className="app-container">
-            {renderGamePage()}
-        </div>
-    );
+  return (
+    <div className="app-container">
+      {renderPage()}
+    </div>
+  );
 }
 
 export default App;

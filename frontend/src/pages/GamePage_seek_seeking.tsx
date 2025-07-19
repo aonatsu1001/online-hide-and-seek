@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { sendHidingSpotId } from '../services/socketService';
 import ConfirmButton from '../components/ConfirmButton';
 import Stage1_seeking from '../components/stages/Stage1_seeking';
 import GameUI from '../components/GameUI';
@@ -9,9 +8,10 @@ import myIcon from '../assets/icons/user_icon.png';
 
 interface GamePage_seek_seekingProps {
     hidingSpotId: string | null;
+    userRole: 'HIDER' | 'SEEKER' | null;
 }
 
-const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpotId }) => {
+const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpotId, userRole }) => {
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
     const [timeRemaining, setTimeRemaining] = useState(60);
     const [guessesLeft, setGuessesLeft] = useState(3);
@@ -25,11 +25,15 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
         }
     }, [timeRemaining]);
 
-    const confirmHidingSpot = () => {
-        if (selectedSpotId) {
-            sendHidingSpotId(selectedSpotId);
-            alert(`ID: ${selectedSpotId} を探します！`);
-            setGuessesLeft(prevGuesses => prevGuesses - 1);
+    const handleGuess = () => {
+        if (!selectedSpotId) return;
+
+        if (selectedSpotId === hidingSpotId) {
+            alert('見つけた！あなたの勝ちです！');
+            // ここでゲーム終了の処理を呼び出す
+        } else {
+            alert('そこにはいないようだ...');
+            setGuessesLeft(prev => prev - 1);
         }
     };
 
@@ -40,11 +44,13 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
                 selectedSpotId={selectedSpotId}
                 onSpotClick={setSelectedSpotId}
                 userIcon={myIcon}
-                hiddenSpotId={hidingSpotId}
+                hidingSpotId={hidingSpotId}
+                userRole={userRole}
             />
             <ConfirmButton 
-                onClick={confirmHidingSpot} 
-                disabled={!selectedSpotId} 
+                onClick={handleGuess} 
+                disabled={!selectedSpotId || guessesLeft === 0}
+                text="ここだ！"
             />
         </div>
     );

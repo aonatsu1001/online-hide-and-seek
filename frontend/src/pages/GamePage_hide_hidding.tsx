@@ -9,10 +9,10 @@ import GameUI from '../components/GameUI';
 import myIcon from '../assets/icons/user_icon.png';
 
 interface GamePage_hide_hiddingProps {
-    onHidingSpotConfirmed: () => void;
+    onTimeEnd: (spotId: string | null) => void;
 }
 
-const GamePage_hide_hidding: React.FC<GamePage_hide_hiddingProps> = ({ onHidingSpotConfirmed }) => {
+const GamePage_hide_hidding: React.FC<GamePage_hide_hiddingProps> = ({ onTimeEnd }) => {
     // ゲームの状態管理(どの場所が選択されたか)は、親であるGamePageが担当します
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
     const [timeRemaining, setTimeRemaining] = useState(60); // 制限時間を60秒に設定
@@ -23,14 +23,16 @@ const GamePage_hide_hidding: React.FC<GamePage_hide_hiddingProps> = ({ onHidingS
                 setTimeRemaining(prevTime => prevTime - 1);
             }, 1000);
             return () => clearInterval(timerId);
+        } else {
+            onTimeEnd(selectedSpotId);
         }
-    }, [timeRemaining]);
+    }, [timeRemaining, onTimeEnd, selectedSpotId]);
 
     // バックエンドへの送信ロジックもGamePageが担当します
     const confirmHidingSpot = () => {
         if (selectedSpotId) {
             sendHidingSpotId(selectedSpotId);
-            onHidingSpotConfirmed();
+            onTimeEnd(selectedSpotId);
         }
     };
 

@@ -7,9 +7,10 @@ import myIcon from '../assets/icons/user_icon.png';
 
 interface GamePage_hide_seekingProps {
     hidingSpotId: string | null;
+    userRole: 'HIDER' | 'SEEKER' | null;
 }
 
-const GamePage_hide_seeking: React.FC<GamePage_hide_seekingProps> = ({ hidingSpotId }) => {
+const GamePage_hide_seeking: React.FC<GamePage_hide_seekingProps> = ({ hidingSpotId, userRole }) => {
     const [timeRemaining, setTimeRemaining] = useState(60);
 
     useEffect(() => {
@@ -28,7 +29,8 @@ const GamePage_hide_seeking: React.FC<GamePage_hide_seekingProps> = ({ hidingSpo
                 selectedSpotId={null}
                 onSpotClick={() => {}}
                 userIcon={myIcon}
-                hiddenSpotId={hidingSpotId}
+                hidingSpotId={hidingSpotId}
+                userRole={userRole}
             />
         </div>
     );

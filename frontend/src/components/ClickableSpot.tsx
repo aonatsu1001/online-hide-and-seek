@@ -1,21 +1,22 @@
 import React from 'react';
 
 interface ClickableSpotProps {
-  id: string; // サイト制作者が割り当てるユニークID
-  userIcon: string; // 差し替え用のユーザーアイコン画像
-  isSelected: boolean; // この場所が選択されているか（親コンポーネントが管理）
-  onClick: (id: string) => void; // クリックされたことを親に通知する関数
-  children: React.ReactNode; // サイト制作者が配置する元の画像や要素
+  id: string;
+  userIcon: string;
+  isSelected: boolean;
+  onClick: (id: string) => void;
+  children: React.ReactNode;
+  userRole?: 'HIDER' | 'SEEKER' | null; // userRoleをオプショナルで追加
 }
 
-const ClickableSpot: React.FC<ClickableSpotProps> = ({ id, userIcon, isSelected, onClick, children }) => {
+const ClickableSpot: React.FC<ClickableSpotProps> = ({ id, userIcon, isSelected, onClick, children, userRole }) => {
 
-    // isSelectedがtrueの場合、children（元のimg要素）をクローンし、
-    // srcプロパティだけをuserIconに差し替える
+    // HIDERの場合のみ、選択されたらアイコンを差し替える
+    const shouldShowIcon = isSelected && userRole === 'HIDER';
+
     const content = (
-        // isSelectedがtrueでもfalseでも、childrenがReact要素であることを確認
-        React.isValidElement(children) && isSelected
-        ? React.cloneElement(children as React.ReactElement, { src: userIcon, alt: 'Selected Spot' })
+        React.isValidElement(children) && shouldShowIcon
+        ? React.cloneElement(children as React.ReactElement<React.ImgHTMLAttributes<HTMLImageElement>>, { src: userIcon, alt: 'Selected Spot' })
         : children
     );
 
