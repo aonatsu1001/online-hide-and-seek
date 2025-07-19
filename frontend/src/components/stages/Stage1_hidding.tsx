@@ -104,7 +104,12 @@ const Stage1: React.FC<Stage1Props> = ({
       <div className="stage-body">
         <SearchBar />
         <div className="content-wrapper">
-          <Sidebar />
+          <Sidebar
+            selectedSpotId={selectedSpotId}
+            onSpotClick={onSpotClick}
+            userIcon={userIcon}
+            userRole={'HIDER'}
+          />
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
               {allSpots.map((spot) => (
@@ -140,5 +145,3 @@ const Stage1: React.FC<Stage1Props> = ({
 }
 
 export default Stage1
-
-

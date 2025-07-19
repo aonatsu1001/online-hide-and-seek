@@ -38,7 +38,6 @@ import kakuseiImage from '../../assets/stage_elements/stage1/kakusei.png'
 import mannenImage from '../../assets/stage_elements/stage1/mannen.png'
 import mailImage from '../../assets/stage_elements/stage1/mail.png'
 
-
 const Stage1_seeking: React.FC<Stage1Props> = ({
   selectedSpotId,
   onSpotClick,
@@ -51,7 +50,7 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-  };
+  }
 
   const allSpots = [
     { id: 'adoresu', src: adoresuImage, alt: 'アドレス' },
@@ -103,14 +102,18 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
     },
   ]
 
-
   return (
     <>
       <Header />
       <div className="stage-body">
         <SearchBar />
         <div className="content-wrapper">
-          <Sidebar />
+          <Sidebar
+            selectedSpotId={selectedSpotId}
+            onSpotClick={onSpotClick}
+            userIcon={userIcon}
+            userRole={userRole}
+          />
           <main className="main-content" style={backgroundStyle}>
             <div className="content-grid">
               {allSpots.map((spot) => {
@@ -138,13 +141,10 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
                       userRole={userRole}
                       hidingSpotId={hidingSpotId}
                     >
-                      <img
-                        src={spot.src}
-                        alt={spot.alt}
-                      />
+                      <img src={spot.src} alt={spot.alt} />
                     </ClickableSpot>
                   </div>
-                );
+                )
               })}
             </div>
             <div className="news-feed-container">
@@ -162,8 +162,7 @@ const Stage1_seeking: React.FC<Stage1Props> = ({
         </div>
       </div>
     </>
-  );
-};
-
+  )
+}
 
 export default Stage1_seeking

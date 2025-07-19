@@ -37,9 +37,6 @@
   max-width: 100%;
   max-height: 80%;
   object-fit: contain;
-<<<<<<< HEAD
-}
-=======
 }
 
 /* ニュースフィードのコンテナ */
@@ -51,4 +48,3 @@
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
->>>>>>> 168795332bf9c919b23a556f3b1b9fd0316060df
