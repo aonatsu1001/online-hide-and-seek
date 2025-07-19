@@ -1,0 +1,65 @@
+/* ロビーページ全体のコンテナ */
+.lobby-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+/* メインタイトル */
+.lobby-title {
+  font-family: 'M PLUS Rounded 1c', 'Arial Rounded MT Bold', sans-serif;
+  /* ★ フォントサイズを60pxに変更 */
+  font-size: 60px;
+  font-weight: 800;
+  /* ★ 色をオレンジに変更 */
+  color: #d93025;
+  margin-bottom: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* サブタイトル */
+.lobby-subtitle {
+  /* ★ フォントサイズを22pxに変更 */
+  font-size: 22px;
+  /* ★ 色を黒に変更 */
+  color: #000000;
+  margin-top: 5px;
+  margin-bottom: 50px;
+}
+
+/* UI要素（ボタンや入力欄）のコンテナ */
+.lobby-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  align-items: center;
+}
+
+.lobby-actions hr {
+  width: 100%;
+  border-style: solid;
+  border-color: #eee;
+}
+
+.lobby-actions .room-creation,
+.lobby-actions .room-join {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* ↓↓↓ このブロックを丸ごと追加する ↓↓↓ */
+.lobby-input {
+  /* 上下の余白を増やすことで縦の長さを調整 */
+  padding: 12px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+}
