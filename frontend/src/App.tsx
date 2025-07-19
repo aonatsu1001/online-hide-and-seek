@@ -109,6 +109,7 @@ function App() {
       {renderPage()}
     </div>
   );
+
 }
 
-export default App;
+export default App
