@@ -1,0 +1,24 @@
+.decorative-icon {
+  position: absolute;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer; /* ← クリックできることを示すカーソルに変更 */
+  transition: all 0.2s ease; /* ← スムーズな変化のための設定 */
+}
+
+/* ↓↓↓ このブロックを丸ごと追加 ↓↓↓ */
+.decorative-icon.selected {
+  outline: 3px solid #00a3ff; /* 選択された時の青い枠 */
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.decorative-icon:hover {
+  transform: scale(1.1); /* ホバー時に少し大きくする */
+}
+/* ↑↑↑ このブロックを丸ごと追加 ↑↑↑ */
+
+.decorative-icon img {
+  width: 100%;
+  height: 100%;
+}
