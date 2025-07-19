@@ -1,38 +1,38 @@
-import React from 'react'
-import Header from '../Header'
-import SearchBar from '../SearchBar'
-import Sidebar from '../Sidebar'
-import ClickableSpot from '../ClickableSpot_sena' // `ClickableSpot` のパスを統一
-import './../../styles/stage1.css'
+import React from 'react';
+import Header from '../Header';
+import SearchBar from '../SearchBar';
+import Sidebar from '../Sidebar';
+import ClickableSpot from '../ClickableSpot'; // `ClickableSpot` のパスを統一
+import './../../styles/stage1.css';
 
 // --- Propsの定義 ---
 interface Stage1Props {
-  selectedSpotId: string | null
-  onSpotClick: (id: string) => void
-  userIcon: string
+  selectedSpotId: string | null;
+  onSpotClick: (id: string) => void;
+  userIcon: string;
   // ★ seekingの機能に必要なpropsを追加
-  hidingSpotId: string | null
-  userRole: 'HIDER' | 'SEEKER' | null
+  hidingSpotId: string | null;
+  userRole: 'HIDER' | 'SEEKER' | null;
 }
 
 // --- 画像アセットのインポート ---
-import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png'
-import plantImage from '../../assets/stage_elements/stage1/plant.png'
-import lampImage from '../../assets/stage_elements/stage1/lamp.png'
-import callImage from '../../assets/stage_elements/stage1/call.png'
-import webImage from '../../assets/stage_elements/stage1/web.png'
-import mailImage from '../../assets/stage_elements/stage1/mail.png'
-import hintImage from '../../assets/stage_elements/stage1/hint.png'
-import presentImage from '../../assets/stage_elements/stage1/present.png'
-import cameraImage from '../../assets/stage_elements/stage1/camera.png'
-import heartImage from '../../assets/stage_elements/stage1/heart.png'
-import memoImage from '../../assets/stage_elements/stage1/memo.png'
-import manImage from '../../assets/stage_elements/stage1/man.png'
-import docterImage from '../../assets/stage_elements/stage1/docter.png'
-import washokuImage from '../../assets/stage_elements/stage1/washoku.png'
-import rainImage from '../../assets/stage_elements/stage1/rain.png'
-import micImage from '../../assets/stage_elements/stage1/mic.png'
-import backgroundImage from '../../assets/stage_elements/stage1/background.png'
+import bookshelfImage from '../../assets/stage_elements/stage1/bookshelf.png';
+import plantImage from '../../assets/stage_elements/stage1/plant.png';
+import lampImage from '../../assets/stage_elements/stage1/lamp.png';
+import callImage from '../../assets/stage_elements/stage1/call.png';
+import webImage from '../../assets/stage_elements/stage1/web.png';
+import mailImage from '../../assets/stage_elements/stage1/mail.png';
+import hintImage from '../../assets/stage_elements/stage1/hint.png';
+import presentImage from '../../assets/stage_elements/stage1/present.png';
+import cameraImage from '../../assets/stage_elements/stage1/camera.png';
+import heartImage from '../../assets/stage_elements/stage1/heart.png';
+import memoImage from '../../assets/stage_elements/stage1/memo.png';
+import manImage from '../../assets/stage_elements/stage1/man.png';
+import docterImage from '../../assets/stage_elements/stage1/docter.png';
+import washokuImage from '../../assets/stage_elements/stage1/washoku.png';
+import rainImage from '../../assets/stage_elements/stage1/rain.png';
+import micImage from '../../assets/stage_elements/stage1/mic.png';
+import backgroundImage from '../../assets/stage_elements/stage1/background.png';
 
 const Stage1: React.FC<Stage1Props> = ({
   selectedSpotId,
@@ -48,7 +48,7 @@ const Stage1: React.FC<Stage1Props> = ({
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-  }
+  };
 
   // ★ 選択されたアイテムをハイライトするためのスタイルを返す関数
   const getGridItemStyle = (spotId: string): React.CSSProperties => ({
@@ -58,7 +58,7 @@ const Stage1: React.FC<Stage1Props> = ({
     padding: '5px',
     backgroundColor: selectedSpotId === spotId ? 'rgba(255, 222, 89, 0.2)' : 'transparent',
     transition: 'all 0.2s ease-in-out',
-  })
+  });
 
   // 全ての隠れ場所のデータ
   const allSpots = [
@@ -78,7 +78,7 @@ const Stage1: React.FC<Stage1Props> = ({
     { id: 'washoku', src: washokuImage, alt: '和食' },
     { id: 'rain', src: rainImage, alt: '雨' },
     { id: 'mic', src: micImage, alt: 'マイク' },
-  ]
+  ];
 
   return (
     <>
@@ -99,32 +99,28 @@ const Stage1: React.FC<Stage1Props> = ({
             */}
             <div className="content-grid">
               {allSpots.map((spot) => {
-                // ★ この場所が隠れている場所かどうかを判定
                 const isHiddenHere = hidingSpotId === spot.id;
-
                 return (
-                  // ★ ハイライト用のスタイルを適用
                   <div className="grid-item" key={spot.id} style={getGridItemStyle(spot.id)}>
                     <ClickableSpot
                       id={spot.id}
                       userIcon={userIcon}
                       isSelected={selectedSpotId === spot.id}
                       onClick={onSpotClick}
-                      // ★ userRole を渡す
                       userRole={userRole}
+                      isHidingSpot={isHiddenHere}
                     >
-                      {/* ★ isHiddenHereがtrueならuserIconを、falseならspot.srcを表示 */}
-                      <img src={isHiddenHere ? userIcon : spot.src} alt={spot.alt} />
+                      <img src={spot.src} alt={spot.alt} />
                     </ClickableSpot>
                   </div>
-                )
+                );
               })}
             </div>
           </main>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Stage1
+export default Stage1;

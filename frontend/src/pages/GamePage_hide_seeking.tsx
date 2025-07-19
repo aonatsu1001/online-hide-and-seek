@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Stage1_seeking from '../components/stages/Stage1_seeking';
 import GameUI from '../components/GameUI';
+import Loading from '../components/Loading';
 
 // --- アセットのインポート ---
 import myIcon from '../assets/icons/user_icon.png';
@@ -21,6 +22,10 @@ const GamePage_hide_seeking: React.FC<GamePage_hide_seekingProps> = ({ hidingSpo
             return () => clearInterval(timerId);
         }
     }, [timeRemaining]);
+
+    if (!hidingSpotId) {
+        return <Loading />;
+    }
 
     return (
         <div>

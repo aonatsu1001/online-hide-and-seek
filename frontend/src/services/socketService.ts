@@ -1,78 +1,72 @@
-/**
- * WebSocket通信を管理するモジュール（サンプル）
- */
-
-// バックエンドのWebSocketサーバーに接続
-const roomId = "test_room"; // 仮のルームID
-const socket = new WebSocket(`ws://localhost:8000/ws/game/${roomId}`); // URLは実際の環境に合わせてください
-
-// 接続成功時の処理
-socket.onopen = () => {
-    console.log('Successfully connected to the WebSocket server.');
-};
-
+let socket: WebSocket | null = null;
 let onHidingSpotChosenCallback: ((spotId: string) => void) | null = null;
 let onGameStartCallback: (() => void) | null = null;
 let onRoleUpdateCallback: ((players: any) => void) | null = null;
 
-// サーバーからメッセージを受信した時の処理
-socket.onmessage = (event) => {
+export const initSocket = (roomId: string) => {
+  if (socket) {
+    socket.close();
+  }
+
+  socket = new WebSocket(`ws://localhost:8000/ws/game/${roomId}`);
+
+  socket.onopen = () => {
+    console.log('Successfully connected to the WebSocket server.');
+  };
+
+  socket.onmessage = (event) => {
     const message = JSON.parse(event.data);
     console.log('Message from server: ', message);
 
     if (message.event === 'hiding_spot_chosen' && onHidingSpotChosenCallback) {
-        onHidingSpotChosenCallback(message.data.id);
+      onHidingSpotChosenCallback(message.data.id);
     }
 
     if (message.event === 'game_start' && onGameStartCallback) {
-        onGameStartCallback();
+      onGameStartCallback();
     }
 
     if (message.type === 'role_update' && onRoleUpdateCallback) {
-        onRoleUpdateCallback(message.players);
+      onRoleUpdateCallback(message.players);
     }
+  };
+
+  socket.onerror = (error) => {
+    console.error('WebSocket Error: ', error);
+  };
 };
 
 export const registerHidingSpotChosenCallback = (callback: (spotId: string) => void) => {
-    onHidingSpotChosenCallback = callback;
-    return () => {
-        onHidingSpotChosenCallback = null;
-    };
+  onHidingSpotChosenCallback = callback;
+  return () => {
+    onHidingSpotChosenCallback = null;
+  };
 };
 
 export const registerGameStartCallback = (callback: () => void) => {
-    onGameStartCallback = callback;
-    return () => {
-        onGameStartCallback = null;
-    };
+  onGameStartCallback = callback;
+  return () => {
+    onGameStartCallback = null;
+  };
 };
 
 export const registerRoleUpdateCallback = (callback: (players: any) => void) => {
-    onRoleUpdateCallback = callback;
-    return () => {
-        onRoleUpdateCallback = null;
-    };
+  onRoleUpdateCallback = callback;
+  return () => {
+    onRoleUpdateCallback = null;
+  };
 };
 
-// エラー発生時の処理
-socket.onerror = (error) => {
-    console.error('WebSocket Error: ', error);
-};
-
-/**
- * 隠れる場所のIDをバックエンドに送信する関数
- * @param spotId - 選択された場所のID (string)
- */
 export const sendHidingSpotId = (spotId: string) => {
-    if (socket.readyState === WebSocket.OPEN) {
-        const message = {
-        event: 'set_hiding_spot', // イベント名は同じでOK
-        data: {
-            id: spotId, // 送信するデータをIDに変更
-        },
-        };
-        socket.send(JSON.stringify(message));
-    } else {
-        console.error('WebSocket is not connected.');
-    }
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    const message = {
+      event: 'set_hiding_spot',
+      data: {
+        id: spotId,
+      },
+    };
+    socket.send(JSON.stringify(message));
+  } else {
+    console.error('WebSocket is not connected.');
+  }
 };

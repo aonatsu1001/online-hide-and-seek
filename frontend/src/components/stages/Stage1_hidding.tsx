@@ -2,7 +2,7 @@ import React from 'react'
 import Header from '../Header'
 import SearchBar from '../SearchBar'
 import Sidebar from '../Sidebar'
-import ClickableSpot from '../ClickableSpot_sena'
+import ClickableSpot from '../ClickableSpot'
 import './../../styles/stage1.css'
 
 // --- Propsの定義 ---
@@ -82,6 +82,7 @@ const Stage1: React.FC<Stage1Props> = ({
                     userIcon={userIcon}
                     isSelected={selectedSpotId === spot.id}
                     onClick={onSpotClick}
+                    userRole="HIDER"
                   >
                     <img src={spot.src} alt={spot.alt} />
                   </ClickableSpot>
