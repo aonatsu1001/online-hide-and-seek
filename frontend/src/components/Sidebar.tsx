@@ -24,6 +24,12 @@ import goodIcon from '../assets/stage_elements/stage1/good.png'
 import gensiIcon from '../assets/stage_elements/stage1/gensi.png'
 import bookIcon from '../assets/stage_elements/stage1/book.png'
 import dougaIcon from '../assets/stage_elements/stage1/douga.png'
+import yozoraIcon from'../assets/stage_elements/stage1/yozora.png'
+import japanIcon from'../assets/stage_elements/stage1/japan.png'
+import trackIcon from'../assets/stage_elements/stage1/track.png'
+import flyIcon from'../assets/stage_elements/stage1/fly.png'
+import spanaIcon from'../assets/stage_elements/stage1/spana.png'
+import cupIcon from'../assets/stage_elements/stage1/cup.png'
 
 const Sidebar: React.FC<SidebarProps> = ({
   selectedSpotId,
@@ -44,6 +50,12 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'sidebar-gensi', name: '原子力発電所', icon: gensiIcon },
     { id: 'sidebar-book', name: '読書', icon: bookIcon },
     { id: 'sidebar-douga', name: '動画再生', icon: dougaIcon },
+    { id: 'sidebar-yozora', name:'夜空', icon: yozoraIcon},
+    { id: 'sidebar-japan', name:'日本', icon: japanIcon},
+    { id: 'sidebar-track', name:'トラック', icon: trackIcon},
+    { id: 'sidebar-fly', name:'飛行機', icon: flyIcon},
+    { id: 'sidebar-spana', name:'スパナ', icon: spanaIcon},
+    { id: 'sidebar-cup', name:'カップ', icon: cupIcon},
   ]
 
   return (
