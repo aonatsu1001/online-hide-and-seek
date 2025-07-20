@@ -9,7 +9,7 @@ export const initSocket = (roomId: string) => {
     socket.close();
   }
 
-  socket = new WebSocket(`ws://localhost:8000/ws/game/${roomId}`);
+  socket = new WebSocket(`wss://online-hide-and-seek-back.onrender.com/ws/game/${roomId}`);
 
   socket.onopen = () => {
     console.log('Successfully connected to the WebSocket server.');
@@ -91,7 +91,7 @@ export const sendHidingSpotId = (spotId: string) => {
 };
 
 export const sendGuess = (spotId: string) => {
-    if (socket.readyState === WebSocket.OPEN) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
         const message = {
             event: 'guess',
             data: {
