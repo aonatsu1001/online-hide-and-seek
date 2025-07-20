@@ -30,8 +30,25 @@ const ClickableSpot: React.FC<ClickableSpotProps> = ({
 
   const isThisHidingSpot = hidingSpotId === id; // Determine if this is the hiding spot
 
-  // HIDERが選択したか、またはそこが隠れ場所ならアイコンを表示
-  const shouldShowIcon = (isSelected && userRole === 'HIDER') || isThisHidingSpot
+  // アイコンを表示するかどうかと、その透明度を決定する
+  let shouldRenderIcon = false;
+  let iconOpacity = 0;
+
+  if (userRole === 'SEEKER') {
+    // 鬼の画面：隠れ場所ならチラ見せ
+    if (isThisHidingSpot) {
+      shouldRenderIcon = true;
+      iconOpacity = 0.3;
+    }
+  } else if (userRole === 'HIDER') {
+    // 隠れる側の画面
+    // 鬼が選択した場所、または自分が隠れている場所なら表示
+    if (isSelected || isThisHidingSpot) {
+      shouldRenderIcon = true;
+      // 自分が隠れている場所は常に0.3、そうでなければ(鬼が選択した場所)1
+      iconOpacity = isThisHidingSpot ? 0.3 : 1;
+    }
+  }
 
   const userIconStyle: React.CSSProperties = {
     position: 'absolute',
@@ -40,10 +57,11 @@ const ClickableSpot: React.FC<ClickableSpotProps> = ({
     width: '100%',
     height: '100%',
     zIndex: -1,
-    opacity: isThisHidingSpot ? 0.3 : (shouldShowIcon ? 1 : 0), // Apply glimpse opacity
+    opacity: iconOpacity,
     transition: 'opacity 0.2s',
     objectFit: 'contain',
-  }
+  };
+
 
   return (
     <div
@@ -57,7 +75,7 @@ const ClickableSpot: React.FC<ClickableSpotProps> = ({
       {/* クリックされたアイコンを表示 */}
       {children}
       {/* HIDERが選択したか、またはそこが隠れ場所ならアイコンをチラ見せ */}
-      {shouldShowIcon && (
+      {shouldRenderIcon && (
         <img src={userIcon} alt="User Icon" style={userIconStyle} />
       )}
     </div>

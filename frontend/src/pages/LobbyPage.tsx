@@ -19,9 +19,12 @@ const LobbyPage: React.FC<LobbyPageProps> = ({
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch('http://localhost:8000/room/create_room', {
-        method: 'POST',
-      })
+      const response = await fetch(
+        'https://online-hide-and-seek-back.onrender.com/room/create_room',
+        {
+          method: 'POST',
+        },
+      )
       if (!response.ok) {
         throw new Error('ルームの作成に失敗しました。')
       }
@@ -45,7 +48,7 @@ const LobbyPage: React.FC<LobbyPageProps> = ({
     setError(null)
     try {
       const response = await fetch(
-        `http://localhost:8000/room/join_room/${roomId}`,
+        `https://online-hide-and-seek-back.onrender.com/room/join_room/${roomId}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
