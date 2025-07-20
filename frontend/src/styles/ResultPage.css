@@ -1,0 +1,45 @@
+.result-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f8ff;
+}
+
+.result-container {
+  text-align: center;
+  padding: 40px;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.result-title {
+  font-size: 3rem;
+  margin-bottom: 30px;
+}
+
+.result-title.win {
+  color: #ff6347; /* トマト色 */
+}
+
+.result-title.lose {
+  color: #4682b4; /* スチールブルー */
+}
+
+.lobby-button {
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  background-color: #3cb371; /* ミディアムシーグリーン */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.lobby-button:hover {
+  background-color: #2e8b57; /* シーグリーン */
+}

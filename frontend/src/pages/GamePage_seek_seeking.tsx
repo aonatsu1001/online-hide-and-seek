@@ -11,13 +11,13 @@ import myIcon from '../assets/icons/user_icon.png';
 interface GamePage_seek_seekingProps {
     hidingSpotId: string | null;
     userRole: 'HIDER' | 'SEEKER' | null;
+    onGameEnd: (resultData: any) => void;
 }
 
-const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpotId, userRole }) => {
+const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpotId, userRole, onGameEnd }) => {
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
     const [timeRemaining, setTimeRemaining] = useState(60);
     const [guessesLeft, setGuessesLeft] = useState(3);
-    const [gameResult, setGameResult] = useState<string | null>(null);
 
     useEffect(() => {
         if (timeRemaining > 0) {
@@ -30,15 +30,10 @@ const GamePage_seek_seeking: React.FC<GamePage_seek_seekingProps> = ({ hidingSpo
 
     useEffect(() => {
         const unregister = registerGameResultCallback((data) => {
-            setGameResult(data.result);
-            if (data.result === 'found') {
-                alert('見つけた！あなたの勝ちです！');
-            } else {
-                alert('そこにはいないようだ...');
-            }
+            onGameEnd(data);
         });
         return () => unregister();
-    }, []);
+    }, [onGameEnd]);
 
     const handleGuess = () => {
         if (!selectedSpotId) return;
