@@ -1,0 +1,23 @@
+/* ヘッダー全体をページ上部中央に配置 */
+.app-header {
+  /* ↓↓↓ この部分を書き換える ↓↓↓ */
+  /* position: fixed; を削除 */
+  margin: 20px auto; /* 上下に20pxの余白、左右はautoで中央揃え */
+  /* top, left, transform, z-index を削除 */
+  /* ↑↑↑ この部分を書き換える ↑↑↑ */
+
+  width: 95%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 25px;
+  background-color: rgba(255, 255, 255, 0.8); /* 透明度を少し上げる */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
