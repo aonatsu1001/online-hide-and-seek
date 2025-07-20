@@ -38,7 +38,6 @@ const GamePage_hide_hidding: React.FC<GamePage_hide_hiddingProps> = ({ onTimeEnd
 
     return (
         <div>
-        <GameUI timeRemaining={timeRemaining} guessesLeft={0} />
         {/* ↓作成したStage1コンポーネントを呼び出し、必要な情報を渡す */}
         <Stage1_hidding 
             selectedSpotId={selectedSpotId}
