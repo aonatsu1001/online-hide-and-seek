@@ -20,7 +20,7 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({ username, roomId }) => {
     setSelectedRole(role)
     console.log(`役割「${role}」を選択しました。サーバーに通知します。`)
     try {
-      const response = await fetch('http://localhost:8000/select-role', {
+      const response = await fetch('https://online-hide-and-seek-back.onrender.com/select-role', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

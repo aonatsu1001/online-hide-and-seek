@@ -29,7 +29,6 @@ const GamePage_seek_hidding: React.FC<GamePage_seek_hiddingProps> = ({ onHidingS
 
     return (
         <div>
-            <GameUI timeRemaining={timeRemaining} guessesLeft={3} />
             <Stage1_seeking 
                 selectedSpotId={null}
                 onSpotClick={() => {}}
